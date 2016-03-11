@@ -69,7 +69,7 @@
 #define _Mock_PrintFileLine() \
     printf("\nLine: %d, File: %s\n", __LINE__, __FILE__)
 
-#define Assert_ArrayEquals(len, expected, actual) { \
+#define Assert_ArrayEquals(len, expected, actual) ;{ \
     bool _fail= false; \
     for (uint32_t _i= 0; _i < len; _i++) { \
         if ((expected[_i]) != (actual[_i])) { \
@@ -100,7 +100,7 @@
         _assertions++; \
     }
 
-#define Assert_EqualsFloat(expected, actual, delta) { \
+#define Assert_EqualsFloat(expected, actual, delta) ;{ \
     float _d= (expected) - (actual); \
     if ((_d < 0.0f ? -_d : _d) > (delta)) { \
         _Mock_PrintFileLine(); \
@@ -151,7 +151,7 @@
         _assertions++; \
     }
 
-#define Assert_StrEquals(expected, actual) { \
+#define Assert_StrEquals(expected, actual) ;{ \
     bool _fail= false; \
     uint32_t _elen = strlen(expected); \
     uint32_t _alen = strlen(actual); \
@@ -199,7 +199,7 @@
         _Mock_Exit() \
     }
 
-#define Assert_Init() { \
+#define Assert_Init() ;{ \
     FILE* _f= fopen("assertions.txt", "r"); \
     if(_f == NULL) { \
         _initAssertions= 0; \
@@ -213,7 +213,7 @@
     fclose(_f); \
     }
 
-#define Assert_Save() { \
+#define Assert_Save() ;{ \
     FILE* _f= fopen("assertions.txt", "w"); \
     if(_f == NULL) { \
         printf("Failed to open asserts.txt data file in Assert_Save()\n"); \
@@ -532,7 +532,7 @@
     } \
     END_EXTERN_C
 
-#define Assert_Returned(fn, expected) { \
+#define Assert_Returned(fn, expected) ;{ \
     bool _match= false; \
     for (uint32_t _i= 0; _i < _mock_##fn.callCount; _i++) { \
         _match |= (_mock_##fn.retHistory[_i] == (expected)); \
@@ -579,7 +579,7 @@
 #define Assert_CallOrder(fn1st, fn2nd) \
     Assert_Fail("TODO: Assert_CallOrder()")
 
-#define Assert_Called0(fn) {\
+#define Assert_Called0(fn) ;{\
     if(_mock_##fn.callCount == 0) { \
         _Mock_PrintFileLine(); \
         printf("Assert_Called failed: %s, Calls: %d\n", #fn, _mock_##fn.callCount); \
@@ -588,7 +588,7 @@
         _assertions++; \
     }} 
 
-#define Assert_Called1(fn, arg0) {\
+#define Assert_Called1(fn, arg0) ;{\
     bool _match= false; \
     for (uint32_t _i= 0; _i < _mock_##fn.callCount; _i++) { \
         _match |= (_mock_##fn.arg0History[_i] == (arg0)); \
@@ -604,7 +604,7 @@
         _assertions++; \
     }} 
 
-#define Assert_Called2(fn, arg0, arg1) {\
+#define Assert_Called2(fn, arg0, arg1) ;{\
     bool _match= false; \
     for (uint32_t _i= 0; _i < _mock_##fn.callCount; _i++) { \
         _match |= (_mock_##fn.arg0History[_i] == (arg0)) & \
@@ -621,7 +621,7 @@
         _assertions++; \
     }} \
 
-#define Assert_Called3(fn, arg0, arg1, arg2) {\
+#define Assert_Called3(fn, arg0, arg1, arg2) ;{\
     bool _match= false; \
     for (uint32_t _i= 0; _i < _mock_##fn.callCount; _i++) { \
         _match |= (_mock_##fn.arg0History[_i] == (arg0)) & \
@@ -639,7 +639,7 @@
         _assertions++; \
     }} \
 
-#define Assert_Called4(fn, arg0, arg1, arg2, arg3) {\
+#define Assert_Called4(fn, arg0, arg1, arg2, arg3) ;{\
     bool _match= false; \
     for (uint32_t _i= 0; _i < _mock_##fn.callCount; _i++) { \
         _match |= (_mock_##fn.arg0History[_i] == (arg0)) & \
@@ -658,7 +658,7 @@
         _assertions++; \
     }} \
 
-#define Assert_Called5(fn, arg0, arg1, arg2, arg3, arg4) {\
+#define Assert_Called5(fn, arg0, arg1, arg2, arg3, arg4) ;{\
     bool _match= false; \
     for (uint32_t _i= 0; _i < _mock_##fn.callCount; _i++) { \
         _match |= (_mock_##fn.arg0History[_i] == (arg0)) & \
@@ -903,7 +903,7 @@
         _assertions++; \
     }
 
-#define Assert_AllCalls1(fn, arg0) { \
+#define Assert_AllCalls1(fn, arg0) ;{ \
     bool _match= true; \
     uint32_t _i; \
     for (_i= 0; _i < _mock_##fn.callCount; _i++) { \
@@ -920,7 +920,7 @@
         _assertions++; \
     }} \
 
-#define Assert_AllCalls2(fn, arg1) { \
+#define Assert_AllCalls2(fn, arg1) ;{ \
     bool _match= true; \
     uint32_t _i; \
     for (_i= 0; _i < _mock_##fn.callCount; _i++) { \
@@ -937,7 +937,7 @@
         _assertions++; \
     }} \
 
-#define Assert_AllCalls3(fn, arg2) { \
+#define Assert_AllCalls3(fn, arg2) ;{ \
     bool _match= true; \
     uint32_t _i; \
     for (_i= 0; _i < _mock_##fn.callCount; _i++) { \
@@ -954,7 +954,7 @@
         _assertions++; \
     }} \
 
-#define Assert_AllCalls4(fn, arg3) { \
+#define Assert_AllCalls4(fn, arg3) ;{ \
     bool _match= true; \
     uint32_t _i; \
     for (_i= 0; _i < _mock_##fn.callCount; _i++) { \
@@ -971,7 +971,7 @@
         _assertions++; \
     }} \
 
-#define Assert_AllCalls5(fn, arg4) { \
+#define Assert_AllCalls5(fn, arg4) ;{ \
     bool _match= true; \
     uint32_t _i; \
     for (_i= 0; _i < _mock_##fn.callCount; _i++) { \
