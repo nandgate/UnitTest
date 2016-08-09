@@ -60,9 +60,9 @@
     uint32_t _initAssertions; \
     uint32_t _assertions; \
     bool _mockExit= true; \
-    const uint32_t _mockDepth= depth; \
+    enum { _mockDepth= depth } \
     END_EXTERN_C
-        
+
 #define _Mock_Exit() \
     if (_mockExit) { exit(-1); }
 
