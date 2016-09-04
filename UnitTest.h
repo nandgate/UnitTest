@@ -64,7 +64,7 @@
     END_EXTERN_C
 
 #define _Mock_Exit() \
-    if (_mockExit) { exit(-1); }
+    if (_mockExit) { exit(1); }
 
 #define _Mock_PrintFileLine() \
     printf("\nLine: %d, File: %s\n", __LINE__, __FILE__)
