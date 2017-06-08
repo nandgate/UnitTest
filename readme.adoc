@@ -217,6 +217,41 @@ int main(int argc, char **argv) {
 }
 ----
 
+=== Assert_Note(msg)
+Set a note to be displayed when an Asserts fails. Note: If used, be sure to clear note
+by setting it to NULL in setUp.
+
+[source,C]
+.test_AssertNote.c
+----
+#include "UnitTest.h"
+
+Mock_Vars(0);
+
+static void setUp(void)
+{
+    Aeert_Note(NULL);
+}
+
+static void test_AssertWithNote(void)
+{
+    setUp();
+    char *str = "Hello";
+
+    Assert_Note("This is a note.");
+    Assert_IsNotNull(str); 
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_AssertWithNote();
+    
+    test_Save();
+    return 0;
+}
+----
+
 === Assert_IsNotNull(actual)
 === Assert_IsNull(actual)
 Asserts that the specified value is NULL.

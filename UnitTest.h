@@ -59,6 +59,7 @@
     EXTERN_C \
     uint32_t _initAssertions; \
     uint32_t _assertions; \
+    char *_note= NULL; \
     bool _mockExit= true; \
     enum { _mockDepth= depth } \
     END_EXTERN_C
@@ -67,7 +68,10 @@
     if (_mockExit) { exit(1); }
 
 #define _Mock_PrintFileLine() \
-    printf("\nLine: %d, File: %s\n", __LINE__, __FILE__)
+    if(_note != NULL) { \
+        printf("\nAssert Note: %s", _note); \
+    } \
+    printf("\nLine: %d, File: %s\n", __LINE__, __FILE__) 
 
 #define Assert_ArrayEquals(len, expected, actual) ;{ \
     bool _fail= false; \
