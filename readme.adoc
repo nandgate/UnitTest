@@ -230,7 +230,7 @@ Mock_Vars(0);
 
 static void setUp(void)
 {
-    Aeert_Note(NULL);
+    Assert_Note(NULL);
 }
 
 static void test_AssertWithNote(void)
