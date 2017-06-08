@@ -208,9 +208,9 @@
     else if(fscanf(_f, "%u", &_initAssertions) != 1) { \
         _initAssertions= 0; \
         printf("Assert count not found in asserts.txt, resetting to zero.\n"); \
+        fclose(_f); \
     } \
     _assertions= _initAssertions; \
-    fclose(_f); \
     }
 
 #define Assert_Save() ;{ \
