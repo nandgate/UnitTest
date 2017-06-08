@@ -1,5 +1,5 @@
 /******************************************************************************
-* Copyright (C) <2016> NAND Gate Technologies LLC
+* Copyright (C) <2017> NAND Gate Technologies LLC
 * Permission is hereby granted, free of charge, to any person obtaining a copy 
 * of this software and associated documentation files (the "Software"), to 
 * deal in the Software without restriction, including without limitation the 
@@ -18,10 +18,10 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
 * THE SOFTWARE.
 * 
-* Except as contained in this notice, the name of NAND Gate Technolgies LLC 
+* Except as contained in this notice, the name of NAND Gate Technologies LLC 
 * shall not be used in advertising or otherwise to promote the sale, use or 
 * other dealings in this Software without prior written authorization from 
-* NAND Gate Technolgies.
+* NAND Gate Technologies.
 ******************************************************************************/
 
 #ifndef UNIT_TEST_H
@@ -72,6 +72,8 @@
         printf("\nAssert Note: %s", _note); \
     } \
     printf("\nLine: %d, File: %s\n", __LINE__, __FILE__) 
+
+#define Assert_Note(msg) _note= msg;
 
 #define Assert_ArrayEquals(len, expected, actual) ;{ \
     bool _fail= false; \
@@ -205,12 +207,11 @@
 
 #define Assert_Init() ;{ \
     FILE* _f= fopen("assertions.txt", "r"); \
+    _initAssertions= 0; \
     if(_f == NULL) { \
-        _initAssertions= 0; \
         printf("Failed to open asserts.txt data file, resetting to zero.\n"); \
     } \
     else if(fscanf(_f, "%u", &_initAssertions) != 1) { \
-        _initAssertions= 0; \
         printf("Assert count not found in asserts.txt, resetting to zero.\n"); \
         fclose(_f); \
     } \
