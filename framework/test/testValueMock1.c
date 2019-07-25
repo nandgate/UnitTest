@@ -24,17 +24,18 @@
 * NAND Gate Technolgies.
 ******************************************************************************/
 
-#include "UnitTest.h"
+#include "../UnitTest.h"
 
 Mock_Vars(5);   // must come before mocks
 
-Mock_Void1(testFn, uint8_t);
-Mock_Void1(testFnOther, uint8_t);
+Mock_Value1(uint8_t, testFn, uint8_t);
+Mock_Value1(uint8_t, testFnOther, uint8_t);
 
 bool wasFakeCalled;
-void fake_testFn(uint8_t arg0) {
+uint8_t fake_testFn(uint8_t arg0) {
     Assert_Equals(1, arg0);
     wasFakeCalled= true;
+    return 42;
 }
 
 static void setUp(void) {
@@ -46,8 +47,118 @@ static void setUp(void) {
     Mock_Reset(testFnOther);
 }
 
+static void test_ReturnNotSet(void) {
+    setUp();
+
+    testFn(1);
+}
+
+static void test_Returns(void) {
+    setUp();
+    Mock_Returns(testFn, 1);
+
+    uint8_t result;
+    result= testFn(1);    
+    if(result != 1) {
+        printf("**Fail: test_Returns call 1: %d\n", result);
+        exit(-1);
+    }
+
+    result= testFn(1);    
+    if(result != 1) {
+        printf("**Fail: test_Returns call 2: %d\n", result);
+        exit(-1);
+    }
+}
+
+static void test_Custom(void) {
+    setUp();
+    Mock_Custom(testFn, fake_testFn);
+    
+    uint8_t result;
+    result= testFn(1);    
+    if(result != 42) {
+        printf("**Fail: test_Custom call 1: %d\n", result);
+        exit(-1);
+    }
+
+    result= testFn(1);    
+    if(result != 42) {
+        printf("**Fail: test_Custom call 2: %d\n", result);
+        exit(-1);
+    }
+}
+
+static void test_ReturnsSequence(void) {
+    setUp();
+    uint8_t seq[3]= {21, 32, 43};
+    Mock_ReturnsSequence(testFn, 3, seq);
+    
+    uint8_t result;
+    result= testFn(1);
+    if(result != 21) {
+        printf("**Fail: test_ReturnsSequence call 1: %d\n", result);
+        exit(-1);
+    }
+
+    result= testFn(1);
+    if(result != 32) {
+        printf("**Fail: test_ReturnsSequence call 2: %d\n", result);
+        exit(-1);
+    }
+
+    result= testFn(1);
+    if(result != 43) {
+        printf("**Fail: test_ReturnsSequence call 3: %d\n", result);
+        exit(-1);
+    }
+
+    result= testFn(1);
+    if(result != 43) {
+        printf("**Fail: test_ReturnsSequence call 4: %d\n", result);
+        exit(-1);
+    }
+}
+
+static void test_Pass_AssertReturns_Arg1(void) {
+    setUp();
+    uint8_t seq[3]= {21, 32, 43};
+    Mock_ReturnsSequence(testFn, 3, seq);
+    
+    testFn(1);
+    testFn(1);
+    testFn(1);
+    testFn(1);
+
+    Assert_Returned(testFn, 32);
+    
+    if (_assertions != 1) {
+        printf("**Fail: test_Pass_AssertReturns_Arg1\n");
+        exit(-1);
+    }
+}
+
+static void test_Fail_AssertReturns_Arg1(void) {
+    setUp();
+    uint8_t seq[3]= {21, 32, 43};
+    Mock_ReturnsSequence(testFn, 3, seq);
+    
+    testFn(1);
+    testFn(1);
+    testFn(1);
+    testFn(1);
+
+    Assert_Returned(testFn, 42);
+
+    if (_assertions != 0) {
+        printf("**Fail: test_Fail_AssertReturns_Arg1\n");
+        exit(-1);
+    }
+}
+
 static void test_MockDepth_Void_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
 
     for(uint32_t i= 0; i < _mockDepth+1; i++) {
         testFn(0);
@@ -56,6 +167,8 @@ static void test_MockDepth_Void_Arg1(void) {
 
 static void test_Pass_AssertCallCount_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
+
     Assert_CallCount(0, testFn);
 
     testFn(0);
@@ -72,6 +185,8 @@ static void test_Pass_AssertCallCount_Arg1(void) {
 
 static void test_Fail_AssertCallCount_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
+
     Assert_CallCount(0, testFn);
 
     testFn(0);
@@ -86,6 +201,7 @@ static void test_Fail_AssertCallCount_Arg1(void) {
 
 static void test_Pass_AssertCalledOnce_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
 
     testFn(1);
     Assert_CalledOnce(testFn);
@@ -98,6 +214,7 @@ static void test_Pass_AssertCalledOnce_Arg1(void) {
 
 static void test_Fail_AssertCalledOnce_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
 
     Assert_CalledOnce(testFn);
     testFn(0);
@@ -112,6 +229,7 @@ static void test_Fail_AssertCalledOnce_Arg1(void) {
 
 static void test_Pass_AssertNotCalled_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
 
     Assert_NotCalled(testFn);
 
@@ -123,6 +241,7 @@ static void test_Pass_AssertNotCalled_Arg1(void) {
 
 static void test_Fail_AssertNotCalled_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
 
     testFn(0);
     Assert_NotCalled(testFn);
@@ -135,6 +254,7 @@ static void test_Fail_AssertNotCalled_Arg1(void) {
 
 static void test_Pass_AssertCalled1_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
 
     testFn(0);
     testFn(1);
@@ -151,6 +271,7 @@ static void test_Pass_AssertCalled1_Arg1(void) {
 
 static void test_Fail_AssertCalled1_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
 
     testFn(0);
     testFn(1);
@@ -167,6 +288,7 @@ static void test_Fail_AssertCalled1_Arg1(void) {
 
 static void test_Pass_AssertCalledFirst_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
 
     testFn(0);
     testFn(1);
@@ -181,6 +303,7 @@ static void test_Pass_AssertCalledFirst_Arg1(void) {
 
 static void test_Fail_AssertCalledFirst_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
 
     testFn(1);
     testFn(0);
@@ -195,6 +318,7 @@ static void test_Fail_AssertCalledFirst_Arg1(void) {
 
 static void test_FailNoCalles_AssertCalledFirst_Arg1() {
     setUp();
+    Mock_Returns(testFn, 1);
 
     Assert_CalledFirst1(testFn, 0);
     
@@ -206,6 +330,7 @@ static void test_FailNoCalles_AssertCalledFirst_Arg1() {
 
 static void test_Pass_AssertCalledLast_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
 
     testFn(0);
     testFn(1);
@@ -220,6 +345,7 @@ static void test_Pass_AssertCalledLast_Arg1(void) {
 
 static void test_Fail_AssertCalledLast_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
 
     testFn(1);
     testFn(0);
@@ -234,6 +360,7 @@ static void test_Fail_AssertCalledLast_Arg1(void) {
 
 static void test_FailNoCalles_AssertCalledLast_Arg1() {
     setUp();
+    Mock_Returns(testFn, 1);
 
     Assert_CalledLast1(testFn, 0);
     
@@ -245,6 +372,7 @@ static void test_FailNoCalles_AssertCalledLast_Arg1() {
 
 static void test_Pass_AssertCalledN_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
 
     testFn(0);
     testFn(1);
@@ -259,6 +387,7 @@ static void test_Pass_AssertCalledN_Arg1(void) {
 
 static void test_Fail_AssertCalledN_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
 
     testFn(1);
     testFn(0);
@@ -273,6 +402,7 @@ static void test_Fail_AssertCalledN_Arg1(void) {
 
 static void test_FailNoCalles_AssertCalledN_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
     
     Assert_CalledN1(2, testFn, 0);
     
@@ -284,6 +414,7 @@ static void test_FailNoCalles_AssertCalledN_Arg1(void) {
 
 static void test_Pass_AssertAllCalls_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
 
     testFn(0);
     testFn(0);
@@ -299,6 +430,7 @@ static void test_Pass_AssertAllCalls_Arg1(void) {
 
 static void test_Fail_AssertAllCalls_Arg1(void) {
     setUp();
+    Mock_Returns(testFn, 1);
 
     testFn(0);
     testFn(0);
@@ -325,6 +457,14 @@ static void test_CustomMock_Arg1(void) {
 }
 
 int main(int argc, char **argv) {
+    test_ReturnNotSet();
+    test_Custom();
+    test_Returns();
+    test_ReturnsSequence();
+    
+    test_Pass_AssertReturns_Arg1();
+    test_Fail_AssertReturns_Arg1();
+    
     test_MockDepth_Void_Arg1();
     
     test_Pass_AssertCallCount_Arg1();

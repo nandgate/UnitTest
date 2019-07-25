@@ -1,0 +1,1179 @@
+
+== Configuration
+
+== Use
+UnitTest does assume your projects are structured in a specific way, as follows:
+....
+project
+|- app/
+|  |- include/
+|  |  |- header.h
+|  |  |- module/
+|  |     |- module.h
+|  |- source/
+|     |- foo.c
+|     |- module/
+|        |- module.c
+|- test/
+   |- include/
+      |- UnitTest.h
+   |- source/
+   |- test.sh
+....
+
+Given this structure you may run the unit tests via the `test.sh` script. (e.g. $./test.sh)
+To run the test for a specific module (and it's sub-modules) you may specify the path to the
+module to the script (e.g. $./test.sh module).
+
+== Life Cycle
+=== Assert_Init()
+=== Assert_Save()
+
+== Asserts
+=== Assert_ArrayEquals(len, expected, actual)
+Asserts than the elements of two arrays are equal.
+
+[source,C]
+.test_AssertArrayEquals.c
+----
+#include "UnitTest.h"
+
+Mock_Vars(0);
+
+static void setUp(void)
+{
+}
+
+static void test_AssertArrayEquals(void)
+{
+    setUp();
+    int a[]= {1, 2, 3};
+    int b[]= {0x1, 0x2, 0x3};
+    
+    Assert_ArrayEquals(3, a, b);
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_AssertArrayEquals();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Assert_Equals(expected, actual)
+=== Assert_NotEquals(expected, actual)
+=== Assert_EqualsLong(expected, actual)
+Asserts that two int-like values are equal.
+
+[source,C]
+.test_AssertEquals.c
+----
+#include "UnitTest.h"
+
+Mock_Vars(0);
+
+static void setUp(void)
+{
+}
+
+static void test_AssertEquals(void)
+{
+    setUp();
+    int a= 42
+    int b= 40 + 2;
+    
+    Assert_Equals(a, b);
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_AssertEquals();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Assert_EqualsFloat(expected, actual, delta)
+Asserts that two float (or double) values are equal to the specified precision.
+
+[source,C]
+.test_AssertEqualsFloat.c
+----
+#include "UnitTest.h"
+
+Mock_Vars(0);
+
+static void setUp(void)
+{
+}
+
+static void test_AssertEqualsFloat(void)
+{
+    setUp();
+    float a= 0.1
+    float b= 1.0 / 10.0;
+    
+    Assert_EqualsFloat(a, b, 0.001);
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_AssertEqualsFloat();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Assert_Fail(msg)
+Forces the test to fail with the specified messgae.
+
+[source,C]
+.test_AssertEqualsFloat.c
+----
+#include "UnitTest.h"
+
+Mock_Vars(0);
+
+static void setUp(void)
+{
+}
+
+static void test_AssertFail(void)
+{
+    setUp();
+    
+    if (sizeof(int) != 4) 
+    {
+        Assert_Fail("Say something useful here.");
+    }
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_AssertFail();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Assert_True(actual)
+=== Assert_False(actual)
+Assert that the specified value is true/false.
+
+[source,C]
+.test_AssertBoolean.c
+----
+#include "UnitTest.h"
+
+Mock_Vars(0);
+
+static void setUp(void)
+{
+}
+
+static void test_AssertBoolean(void)
+{
+    setUp();
+    
+    
+    Assert_True(sizeof(int) == 4) 
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_AssertBoolean();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Assert_Note(msg)
+Set a note to be displayed when an Asserts fails. Note: If used, be sure to clear note
+by setting it to NULL in setUp.
+
+[source,C]
+.test_AssertNote.c
+----
+#include "UnitTest.h"
+
+Mock_Vars(0);
+
+static void setUp(void)
+{
+    Assert_Note(NULL);
+}
+
+static void test_AssertWithNote(void)
+{
+    setUp();
+    char *str = "Hello";
+
+    Assert_Note("This is a note.");
+    Assert_IsNotNull(str); 
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_AssertWithNote();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Assert_IsNotNull(actual)
+=== Assert_IsNull(actual)
+Asserts that the specified value is NULL.
+
+[source,C]
+.test_AssertNull.c
+----
+#include "UnitTest.h"
+
+Mock_Vars(0);
+
+static void setUp(void)
+{
+}
+
+static void test_AssertNull(void)
+{
+    setUp();
+    char *str = "Hello";
+
+    Assert_IsNotNull(str); 
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_AssertNull();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Assert_StrEquals(expected, actual)
+Asserts that the strings have the same length an content.
+
+[source,C]
+.test_AssertStrEquals.c
+----
+#include "UnitTest.h"
+
+Mock_Vars(0);
+
+static void setUp(void)
+{
+}
+
+static void test_AssertStrEquals(void)
+{
+    setUp();
+    char *str = "Hello";
+
+    Assert_StrEquals("Hello", str); 
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_AssertStrEquals();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Assett_StrContains(expected, actual) TODO
+=== Assert_SubString(pos, expected, actual) TODO
+
+== Mock Declarations
+=== Mock_Void(fn)
+=== Mock_Void1(fn, arg0_t)
+=== Mock_Void2(fn, arg0_t, arg1_t)
+=== Mock_Void3(fn, arg0_t, arg1_t, arg2_t)
+=== Mock_Void4(fn, arg0_t, arg1_t, arg2_t, arg3_t)
+=== Mock_Void5(fn, arg0_t, arg1_t, arg2_t, arg3_t, arg4_t)
+Declares an mock function that has no return value.
+
+[source,C]
+.Foo.h
+----
+#pragma once
+void Foo(uint8_t a, uint32_t b);
+----
+
+.Bar.h
+----
+#pragma once
+void Bar(void);
+----
+
+[source,C]
+.Bar.c
+----
+#include "Foo.h"
+
+void Bar(void) 
+{
+    Foo(1, 2);
+}
+----
+
+[source,C]
+.test_Bar.c
+----
+#include "Bar.h"
+#include "Foo.h"
+#include "UnitTest.h"
+
+Mock_Vars(1);
+
+Mock_Void2(Foo, uint8_t, uint32_t);
+
+static void setUp(void)
+{
+    Mock_Reset(Foo);
+}
+
+static void test_Bar(void)
+{
+    setUp();
+
+    Bar();
+    
+    Assert_CalledOnce(Foo);
+    Assert_Called2(Foo, 1, 2); 
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_Bar();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Mock_Value(ret_t, fn)
+=== Mock_Value1(ret_t, fn, arg0_t)
+=== Mock_Value2(ret_t, fn, arg0_t, arg1_t)
+=== Mock_Value3(ret_t, fn, arg0_t, arg1_t, arg2_t)
+=== Mock_Value4(ret_t, fn, arg0_t, arg1_t, arg2_t, arg3_t)
+=== Mock_Value5(ret_t, fn, arg0_t, arg1_t, arg2_t, arg3_t, arg4_t)
+Declares an mock functionwith a return value.
+
+[source,C]
+.Foo.h
+----
+#pragma once
+uint16_t Foo(uint8_t a, uint32_t b);
+----
+
+.Bar.h
+----
+#pragma once
+void Bar(void);
+----
+
+[source,C]
+.Bar.c
+----
+#include "Foo.h"
+
+void Bar(void) 
+{
+    Foo(10, 20);
+}
+----
+
+[source,C]
+.test_Bar.c
+----
+#include "Bar.h"
+#include "Foo.h"
+#include "UnitTest.h"
+
+Mock_Vars(1);
+
+Mock_Value2(Foo, uint16_t uint8_t, uint32_t);
+
+static void setUp(void)
+{
+    Mock_Reset(Foo);
+}
+
+static void test_Bar(void)
+{
+    setUp();
+    Mock_Returns(Foo, 42);
+
+    Bar();
+    
+    Assert_CalledOnce(Foo);
+    Assert_Called2(Foo, 10, 20); 
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_Bar();
+    
+    test_Save();
+    return 0;
+}
+----
+
+== Mock Assertions
+=== Assert_Returned(fn, expected)
+Asserts that a mock returned the specified value at least once.
+
+=== Assert_CallCount(count, fn)
+Asserts that a mock is called the specifed number of times.
+
+[source,C]
+.Foo.h
+----
+#pragma once
+void Foo(void);
+----
+
+.Bar.h
+----
+#pragma once
+void Bar(void);
+----
+
+[source,C]
+.Bar.c
+----
+#include "Foo.h"
+
+void Bar(void) 
+{
+    Foo();
+    Foo();
+}
+----
+
+[source,C]
+.test_Bar.c
+----
+#include "Bar.h"
+#include "Foo.h"
+#include "UnitTest.h"
+
+Mock_Vars(1);
+
+Mock_Void(Foo);
+
+static void setUp(void)
+{
+    Mock_Reset(Foo);
+}
+
+static void test_Bar(void)
+{
+    setUp();
+
+    Bar();
+    
+    Assert_CallCount(2, Foo);
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_Bar();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Assert_CalledOnce(fn)
+Asserts that the mock is called exactly once.
+
+[source,C]
+.Foo.h
+----
+#pragma once
+void Foo(void);
+----
+
+.Bar.h
+----
+#pragma once
+void Bar(void);
+----
+
+[source,C]
+.Bar.c
+----
+#include "Foo.h"
+
+void Bar(void) 
+{
+    Foo();
+}
+----
+
+[source,C]
+.test_Bar.c
+----
+#include "Bar.h"
+#include "Foo.h"
+#include "UnitTest.h"
+
+Mock_Vars(1);
+
+Mock_Void(Foo);
+
+static void setUp(void)
+{
+    Mock_Reset(Foo);
+}
+
+static void test_Bar(void)
+{
+    setUp();
+
+    Bar();
+    
+    Assert_CalledOnce(Foo);
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_Bar();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Assert_NotCalled(fn)
+Asserts that the mock is not called.
+
+[source,C]
+.Foo.h
+----
+#pragma once
+void Foo(void);
+----
+
+.Bar.h
+----
+#pragma once
+void Bar(void);
+----
+
+[source,C]
+.Bar.c
+----
+#include "Foo.h"
+
+void Bar(void) 
+{
+}
+----
+
+[source,C]
+.test_Bar.c
+----
+#include "Bar.h"
+#include "Foo.h"
+#include "UnitTest.h"
+
+Mock_Vars(1);
+
+Mock_Void(Foo);
+
+static void setUp(void)
+{
+    Mock_Reset(Foo);
+}
+
+static void test_Bar(void)
+{
+    setUp();
+
+    Bar();
+    
+    Assert_NotCalled(Foo);
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_Bar();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Assert_CallOrder(fn1st, fn2nd) TODO
+Asserts the order that two mock are called.
+
+=== Assert_Called1(fn, arg0)
+=== Assert_Called2(fn, arg0, arg1)
+=== Assert_Called3(fn, arg0, arg1, arg2)
+=== Assert_Called4(fn, arg0, arg1, arg2, arg3)
+=== Assert_Called5(fn, arg0, arg1, arg2, arg3, arg4)
+Asserts that the mock was invoked at least once with the specified argument(s).
+
+[source,C]
+.Foo.h
+----
+#pragma once
+void Foo(uint8_t a);
+----
+
+.Bar.h
+----
+#pragma once
+void Bar(void);
+----
+
+[source,C]
+.Bar.c
+----
+#include "Foo.h"
+
+void Bar(void) 
+{
+    Foo(1);
+    Foo(2);
+    Foo(3);
+}
+----
+
+[source,C]
+.test_Bar.c
+----
+#include "Bar.h"
+#include "Foo.h"
+#include "UnitTest.h"
+
+Mock_Vars(1);
+
+Mock_Void1(Foo, uint8_t);
+
+static void setUp(void)
+{
+    Mock_Reset(Foo);
+}
+
+static void test_Bar(void)
+{
+    setUp();
+
+    Bar();
+    
+    Assert_Called1(Foo, 2);
+    Assert_Called1(Foo, 1);
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_Bar();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Assert_CalledFirst1(fn, arg0)
+=== Assert_CalledFirst2(fn, arg0, arg1)
+=== Assert_CalledFirst3(fn, arg0, arg1, arg2)
+=== Assert_CalledFirst4(fn, arg0, arg1, arg2, arg3)
+=== Assert_CalledFirst5(fn, arg0, arg1, arg2, arg3, arg4)
+Asserts that the first invocation of the mock was with the specified argument(s).
+
+[source,C]
+.Foo.h
+----
+#pragma once
+void Foo(uint8_t a);
+----
+
+.Bar.h
+----
+#pragma once
+void Bar(void);
+----
+
+[source,C]
+.Bar.c
+----
+#include "Foo.h"
+
+void Bar(void) 
+{
+    Foo(1);
+    Foo(2);
+    Foo(3);
+}
+----
+
+[source,C]
+.test_Bar.c
+----
+#include "Bar.h"
+#include "Foo.h"
+#include "UnitTest.h"
+
+Mock_Vars(1);
+
+Mock_Void1(Foo, uint8_t);
+
+static void setUp(void)
+{
+    Mock_Reset(Foo);
+}
+
+static void test_Bar(void)
+{
+    setUp();
+
+    Bar();
+    
+    Assert_CalledFirst1(Foo, 1);
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_Bar();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Assert_CalledLast1(fn, arg0)
+=== Assert_CalledLast2(fn, arg0, arg1)
+=== Assert_CalledLast3(fn, arg0, arg1, arg2)
+=== Assert_CalledLast4(fn, arg0, arg1, arg2, arg3)
+=== Assert_CalledLast5(fn, arg0, arg1, arg2, arg3, arg4)
+Asserts that the last invocation of the mock was with the specified argument(s).
+
+[source,C]
+.Foo.h
+----
+#pragma once
+void Foo(uint8_t a);
+----
+
+.Bar.h
+----
+#pragma once
+void Bar(void);
+----
+
+[source,C]
+.Bar.c
+----
+#include "Foo.h"
+
+void Bar(void) 
+{
+    Foo(1);
+    Foo(2);
+    Foo(3);
+}
+----
+
+[source,C]
+.test_Bar.c
+----
+#include "Bar.h"
+#include "Foo.h"
+#include "UnitTest.h"
+
+Mock_Vars(1);
+
+Mock_Void1(Foo, uint8_t);
+
+static void setUp(void)
+{
+    Mock_Reset(Foo);
+}
+
+static void test_Bar(void)
+{
+    setUp();
+
+    Bar();
+    
+    Assert_CalledLast1(Foo, 2);
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_Bar();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Assert_CalledN1(n, fn, arg0)
+=== Assert_CalledN2(n, fn, arg0, arg1)
+=== Assert_CalledN3(n, fn, arg0, arg1, arg2)
+=== Assert_CalledN4(n, fn, arg0, arg1, arg2, arg3)
+=== Assert_CalledN5(n, fn, arg0, arg1, arg2, arg3, arg4)
+Asserts that the Nth invocation of the mock was with the specified argument(s).
+
+[source,C]
+.Foo.h
+----
+#pragma once
+void Foo(uint8_t a);
+----
+
+.Bar.h
+----
+#pragma once
+void Bar(void);
+----
+
+[source,C]
+.Bar.c
+----
+#include "Foo.h"
+
+void Bar(void) 
+{
+    Foo(1);
+    Foo(2);
+    Foo(3);
+}
+----
+
+[source,C]
+.test_Bar.c
+----
+#include "Bar.h"
+#include "Foo.h"
+#include "UnitTest.h"
+
+Mock_Vars(1);
+
+Mock_Void1(Foo, uint8_t);
+
+static void setUp(void)
+{
+    Mock_Reset(Foo);
+}
+
+static void test_Bar(void)
+{
+    setUp();
+
+    Bar();
+    
+    Assert_CalledLast1(2, Foo, 2);
+    Assert_CalledLast1(1, Foo, 1);
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_Bar();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Assert_AllCalls1(fn, arg0)
+=== Assert_AllCalls2(fn, arg1)
+=== Assert_AllCalls3(fn, arg2)
+=== Assert_AllCalls4(fn, arg3)
+=== Assert_AllCalls5(fn, arg4)
+Asserts that all invocation of the mock had specified argument value.
+
+[source,C]
+.Foo.h
+----
+#pragma once
+void Foo(uint8_t a, uint32_t b);
+----
+
+.Bar.h
+----
+#pragma once
+void Bar(void);
+----
+
+[source,C]
+.Bar.c
+----
+#include "Foo.h"
+
+void Bar(void) 
+{
+    Foo(1, 42);
+    Foo(2, 42);
+    Foo(3, 42);
+}
+----
+
+[source,C]
+.test_Bar.c
+----
+#include "Bar.h"
+#include "Foo.h"
+#include "UnitTest.h"
+
+Mock_Vars(1);
+
+Mock_Void2(Foo, uint8_t, uint32_t);
+
+static void setUp(void)
+{
+    Mock_Reset(Foo);
+}
+
+static void test_Bar(void)
+{
+    setUp();
+
+    Bar();
+    
+    Assert_AllCalls2(Foo, 42);
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_Bar();
+    
+    test_Save();
+    return 0;
+}
+----
+
+== Mock Behaviors
+=== Mock_Reset(fn)
+Reset the tracking data for the mock.  Typically called only once in the setUp function.
+Each mock is reset separately.
+
+=== Mock_Custom(fn, custom)
+Specifies an implementation function for the mock.
+
+[source,C]
+.Foo.h
+----
+#pragma once
+uint8_t Foo(uint8_t a);
+----
+
+.Bar.h
+----
+#pragma once
+uint8_t Bar(uint8_t arg);
+----
+
+[source,C]
+.Bar.c
+----
+#include "Foo.h"
+
+uint8_t Bar(uint8_t arg) 
+{
+    return Foo(arg);
+}
+----
+
+[source,C]
+.test_Bar.c
+----
+#include "Bar.h"
+#include "Foo.h"
+#include "UnitTest.h"
+
+Mock_Vars(1);
+
+Mock_Value1(uint8_t, Foo, uint8_t);
+
+uint8_t myFoo(uint8_t a)
+{
+    return a+1;
+}
+
+static void setUp(void)
+{
+    Mock_Reset(Foo);
+}
+
+static void test_Bar(void)
+{
+    setUp();
+    Mock_Custom(Foo, myFoo);
+
+    uint8_t result = Bar(1);
+    
+    Assert_CalledOnce(Foo);
+    Assert_Equals(2, result);
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_Bar();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Mock_Returns(fn,retValue)
+Specifies a return value for a mock.
+
+[source,C]
+.Foo.h
+----
+#pragma once
+uint8_t Foo(uint8_t a);
+----
+
+.Bar.h
+----
+#pragma once
+uint8_t Bar(uint8_t arg);
+----
+
+[source,C]
+.Bar.c
+----
+#include "Foo.h"
+
+uint8_t Bar(uint8_t arg) 
+{
+    return Foo(arg);
+}
+----
+
+[source,C]
+.test_Bar.c
+----
+#include "Bar.h"
+#include "Foo.h"
+#include "UnitTest.h"
+
+Mock_Vars(1);
+
+Mock_Value1(uint8_t, Foo, uint8_t);
+
+static void setUp(void)
+{
+    Mock_Reset(Foo);
+}
+
+static void test_Bar(void)
+{
+    setUp();
+    Mock_Returns(Foo, 42);
+
+    uint8_t result = Bar(1);
+    
+    Assert_CalledOnce(Foo);
+    Assert_Equals(42, result);
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_Bar();
+    
+    test_Save();
+    return 0;
+}
+----
+
+=== Mock_ReturnsSequence(fn, len, seq)
+Specifies a return sequence for a mock.
+
+[source,C]
+.Foo.h
+----
+#pragma once
+uint8_t Foo(void);
+----
+
+.Bar.h
+----
+#pragma once
+uint8_t Bar(void);
+----
+
+[source,C]
+.Bar.c
+----
+#include "Foo.h"
+
+uint8_t Bar(void) 
+{
+    return Foo() + Foo() + Foo();
+}
+----
+
+[source,C]
+.test_Bar.c
+----
+#include "Bar.h"
+#include "Foo.h"
+#include "UnitTest.h"
+
+Mock_Vars(1);
+
+Mock_Value(uint8_t, Foo);
+
+static void setUp(void)
+{
+    Mock_Reset(Foo);
+}
+
+static void test_Bar(void)
+{
+    setUp();
+    uint8_t sequence[2] = {40, 1};
+    Mock_ReturnsSequence(Foo, sequence, 2);
+
+    uint8_t result = Bar();
+    
+    Assert_Equals(42, result);
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_Bar();
+    
+    test_Save();
+    return 0;
+}
+----
+
+(C) NAND Gate Technologies 2016
