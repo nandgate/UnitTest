@@ -1,33 +1,101 @@
+= Unit Test
+:toc:
 
 == Configuration
+When setting up the UnitTest you will need to customize the UnitTest.sh script
+to accommodate the host compiler and any C language extensions that the target
+compiler introduces. Ultimately the application code will need to be compiled by
+both compilers. It is also important to try to (the best that you can) reproduce
+the targets environment on the host.  The closer the hosts C environment is to
+the target the better the inference is between the two with regard to the
+applicability of the unit tests. For example it would be best if both
+environments used the same size for an `int`.
 
-== Use
+**TODO: dealing with evil embedded compilers and nonstandard keywords.**
+
+=== Project Layout
 UnitTest does assume your projects are structured in a specific way, as follows:
 ....
 project
-|- app/
-|  |- include/
-|  |  |- header.h
-|  |  |- module/
-|  |     |- module.h
-|  |- source/
-|     |- foo.c
-|     |- module/
-|        |- module.c
-|- test/
-   |- include/
-      |- UnitTest.h
-   |- source/
-   |- test.sh
+|-- build.sh                    Script to run unit tests then the application
+|-- app/                        Directory for the application code
+|  |-- include/                 Directory for application includes
+|  |   |-- foo.h                Top level "global" include
+|  |   |-- module/              Directory for modules within application
+|  |       |-- module.h         Public header for module
+|  |       |-- module_p.h       Private header for module
+|  |-- source/                  Directory for application source files
+|      |-- foo.c                Top level "global" source file
+|      |-- module/              Directory for modules within application
+|          |-- module.c         Module source file
+|-- test/                       Directory for the unit tests
+    |-- include/                Directory for unit test includes
+    |   |-- UnitTest.h          The unit test macros
+    |-- source/                 Directory for unit test source files
+    |   |-- test_foo.c          Unit test for 'foo.c'
+    |   |-- module              Directory for module within unit tests
+    |   |   |-- test_module.c   Unit test for the module source 'module.c'
+    |-- test.sh                 Unit test runner script
 ....
 
-Given this structure you may run the unit tests via the `test.sh` script. (e.g. $./test.sh)
-To run the test for a specific module (and it's sub-modules) you may specify the path to the
-module to the script (e.g. $./test.sh module).
+Some notes:
+
+. The directory layout is required by the unit test runner script so it can scan
+the `app/source` and `test/source` directories and auto correlate the unit test
+to the application source files.
+. The name of the unit test must match the name of the application source file
+preceded with `test_`. The path to the files must also be mirrored under
+'app/source' and 'test/source'.
+. Application source files that do not have unit tests will be noted by the test
+runner script.
+
+For example the `app/foo.c` and `test/test_foo.c` files will compiled together
+and run as a test by the unit test runner script.
+
+=== Host Compiler
+
+The unit test run on the host using the hosts native compiler.  A typical build
+will run unit tests first then (provided all of the tests pass) the target
+compiler will compile the application to be loaded and run on the target. The
+application source is therefore processed by (at least) two C compilers.
+
+.File usage by compiler
+....
+    project                   Target    Host (test)
+    |-- app
+    |   |-- source
+    |   |   |-- foo.c         yes       yes
+    |   |   |-- main.c        yes       yes
+    |   |-- include
+    |       |-- foo.h         yes       yes
+    |       |-- main.h        yes       yes
+    |-test
+        |-- test.sh
+        |-- source
+        |   |-- test_foo.c    no        yes
+        |-- include
+            |-- UnitTest.h    no        yes
+....
+
+[NOTE]
+====
+It should possible to run the unit tests on the _target_. This is future work
+planned for the framework. It should be possible to run the same unit tests on
+the host (quickly durring development) and on the target to support CI systems.
+====
+
+== Use
+
+Given above structure you may run the unit tests via the `test.sh` script.
+(e.g. $./test.sh) To run the test for a specific module (and it's sub-modules)
+you may specify the path to the module to the script (e.g. $./test.sh module).
 
 == Life Cycle
 === Assert_Init()
+**TODO**
+
 === Assert_Save()
+**TODO**
 
 == Asserts
 === Assert_ArrayEquals(len, expected, actual)
@@ -1176,4 +1244,4 @@ int main(int argc, char **argv) {
 }
 ----
 
-(C) NAND Gate Technologies 2016
+(C) NAND Gate Technologies 2019
