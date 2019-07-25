@@ -20,12 +20,12 @@ project
 |-- build.sh                    Script to run unit tests then the application
 |-- app/                        Directory for the application code
 |  |-- include/                 Directory for application includes
-|  |   |-- foo.h                Top level "global" include
+|  |   |-- main.h               Top level "global" include
 |  |   |-- module/              Directory for modules within application
 |  |       |-- module.h         Public header for module
 |  |       |-- module_p.h       Private header for module
 |  |-- source/                  Directory for application source files
-|      |-- foo.c                Top level "global" source file
+|      |-- main.c               Top level "global" source file
 |      |-- module/              Directory for modules within application
 |          |-- module.c         Module source file
 |-- test/                       Directory for the unit tests
@@ -49,8 +49,8 @@ preceded with `test_`. The path to the files must also be mirrored under
 . Application source files that do not have unit tests will be noted by the test
 runner script.
 
-For example the `app/foo.c` and `test/test_foo.c` files will compiled together
-and run as a test by the unit test runner script.
+For example the `app/module/module.c` and `test/module/test_moduleo.c` files
+will compiled together and run as a test by the unit test runner script.
 
 === Host Compiler
 

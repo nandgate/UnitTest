@@ -31,7 +31,7 @@ runManualTests() {
 
 # These flasgs are appropriate for using the LLVM compiler under OSX and
 # I'm targeting a 32-bit gcc target (e.g. gcc for ARM).
-CC_FLAGS="-arch i386 -std=c99 -Wall -Iinclude -I../app/include"
+CC_FLAGS="-std=c99 -Wall -Iinclude -I../app/include"
 
 runTest() {
     #echo

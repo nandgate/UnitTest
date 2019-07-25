@@ -1,1 +1,0 @@
-// Stub file for testing the test script source tree iteration.
