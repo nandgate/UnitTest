@@ -81,10 +81,11 @@ application source is therefore processed by (at least) two C compilers.
 ====
 It should possible to run the unit tests on the _target_. This is future work
 planned for the framework. It should be possible to run the same unit tests on
-the host (quickly durring development) and on the target to support CI systems.
+the host (quickly during development) and on the target to support CI systems.
+See https://github.com/nandgate/UnitTest/issues/1#issue-473003640
 ====
 
-== Use
+=== Use
 
 Given above structure you may run the unit tests via the `test.sh` script.
 (e.g. $./test.sh) To run the test for a specific module (and it's sub-modules)
