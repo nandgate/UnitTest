@@ -1,6 +1,31 @@
 = Unit Test
 :toc:
 
+== Overview
+
+The unittest framework provides:
+
+. Facilities for asserting on state.
+. Facility to mock dependant functions.
+
+*TODO: more overview stuff here*
+
+- T get a overview of the basics of the framework see the SimpleExample
+directory.
+- More sophisticated features are noted in the ComplexExample directory.
+- Finally, after understanding the above, to see how to cope with some of the
+oddities of dealing with low level embedded systems see the EmbeddedExample
+directory.
+
+*TODO: more overview stuff*
+
+[NOTE]
+====
+The example projects have a copy of the UnitTest.h and test.sh files. Do not
+use these copies in you projects. The publish version of these files
+is in the framework folder.
+====
+
 == Configuration
 When setting up the UnitTest you will need to customize the UnitTest.sh script
 to accommodate the host compiler and any C language extensions that the target
@@ -90,6 +115,26 @@ See https://github.com/nandgate/UnitTest/issues/1#issue-473003640
 Given above structure you may run the unit tests via the `test.sh` script.
 (e.g. $./test.sh) To run the test for a specific module (and it's sub-modules)
 you may specify the path to the module to the script (e.g. $./test.sh module).
+
+When the unit test framework runs it uses a file called 'assertions.txt' for
+tracking the number assertions during the run. When the framework fist tries
+to write the file it will report errors in opening the file. This is normal and
+expected behavior of the framework.
+
+As stated above, the framework operates by matching a single application source
+file to an single unit test file. These two source files are compiled and the
+executable is run. This process repeats for each application/unit test pair.
+The unit test must satisfy all of the external dependencies of the application
+source file. If you find it hard to provide these dependencies most likely the
+application source is not encapsulated enough and its functionality should be
+split in to small pieces.
+
+Note that because the test framework will only compile one application source
+file it cannot be used for "integration tests".  However, it is important to
+have within the project a strategy in place to test the code as a whole to
+verify the interactions between the units. It is very possible to to create
+unit tests that are asymmetric in how module is mocked vs its actual
+implementation.
 
 == Life Cycle
 === Assert_Init()

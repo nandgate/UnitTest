@@ -11,6 +11,7 @@ static void setUp(void)
 {
     Mock_Reset(mod_Compute);
 
+    // Note the value returned here is specific to the test.
     Mock_Returns(mod_Compute, TEST_INT_VALUE);
 }
 
@@ -20,6 +21,7 @@ static void test_CallsCompute(void)
 
     mod_GetInt();
 
+    // Verify our unit called its dependent function only once.
     Assert_CalledOnce(mod_Compute);
 }
 
@@ -29,6 +31,9 @@ static void test_IntegerReturned(void)
 
     int result = mod_GetInt();
 
+    // Verify that the unit return the value, and that value is dependent on the
+    // the value returned by the units depended function. This is how we test
+    // the interaction between functions/modules.
     Assert_Equals(TEST_INT_VALUE + MOD_THE_INT, result);
 }
 

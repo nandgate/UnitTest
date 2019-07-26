@@ -7,6 +7,9 @@
 
 #include "module.h"     // Private header includes the public header
 
+// Even though these symbols are private to the module I still use the "mod_"
+// prefix on the names.
+
 #define MOD_DEFAULT_STATE   1234
 
 #define MOD_THE_INT 42
