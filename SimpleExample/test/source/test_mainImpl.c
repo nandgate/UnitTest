@@ -2,7 +2,7 @@
 // This is unit test for the main helper function. The unit tests typically
 // include the same files as the application file, with the addition of the
 // "UnitTest.h". I keep the headers in alphabetical order (if the order of the
-// headers matters you shoud fix that...).
+// headers matters you should fix that...).
 
 #include "main_p.h"
 #include "module/module.h"
@@ -44,7 +44,7 @@ Mock_Void(mod_Init);
 #define TEST_UNSET  0x42
 
 // By convention all tests have a setUp function. The frame work does not
-// require or even know about the setUp funtion- you will be calling it manually
+// require or even know about the setUp function- you will be calling it manually
 // in you tests. By convention there is always a setUp function (even if it is
 // empty). The setUp function perform the initialization of state for the test.
 // Some times more than one setup function is created to setup for different
@@ -68,7 +68,7 @@ static void setUp(void)
     // 2. We can give the framework a sequence of values to return on each call.
     // 3. We can provide a custom body for the function that will return
     // whatever value we compute.
-    // For this eample we are going to keep things simple and use option #1 and
+    // For this example we are going to keep things simple and use option #1 and
     // always return a constant value.
     //
     // One other thing to note here: We don'e need to do this in the setUp

@@ -18,10 +18,10 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
 * THE SOFTWARE.
 * 
-* Except as contained in this notice, the name of NAND Gate Technolgies LLC 
+* Except as contained in this notice, the name of NAND Gate Technologies LLC
 * shall not be used in advertising or otherwise to promote the sale, use or 
 * other dealings in this Software without prior written authorization from 
-* NAND Gate Technolgies.
+* NAND Gate Technologies.
 ******************************************************************************/
 
 #include "../UnitTest.h"

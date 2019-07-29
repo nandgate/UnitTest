@@ -74,7 +74,7 @@ preceded with `test_`. The path to the files must also be mirrored under
 . Application source files that do not have unit tests will be noted by the test
 runner script.
 
-For example the `app/module/module.c` and `test/module/test_moduleo.c` files
+For example the `app/module/module.c` and `test/module/test_module.c` files
 will compiled together and run as a test by the unit test runner script.
 
 === Host Compiler
@@ -246,7 +246,7 @@ int main(int argc, char **argv) {
 ----
 
 === Assert_Fail(msg)
-Forces the test to fail with the specified messgae.
+Forces the test to fail with the specified message.
 
 [source,C]
 .test_AssertEqualsFloat.c
@@ -412,7 +412,7 @@ int main(int argc, char **argv) {
 }
 ----
 
-=== Assett_StrContains(expected, actual) TODO
+=== Assert_StrContains(expected, actual) TODO
 === Assert_SubString(pos, expected, actual) TODO
 
 == Mock Declarations
@@ -490,7 +490,7 @@ int main(int argc, char **argv) {
 === Mock_Value3(ret_t, fn, arg0_t, arg1_t, arg2_t)
 === Mock_Value4(ret_t, fn, arg0_t, arg1_t, arg2_t, arg3_t)
 === Mock_Value5(ret_t, fn, arg0_t, arg1_t, arg2_t, arg3_t, arg4_t)
-Declares an mock functionwith a return value.
+Declares an mock function with a return value.
 
 [source,C]
 .Foo.h
@@ -558,7 +558,7 @@ int main(int argc, char **argv) {
 Asserts that a mock returned the specified value at least once.
 
 === Assert_CallCount(count, fn)
-Asserts that a mock is called the specifed number of times.
+Asserts that a mock is called the specified number of times.
 
 [source,C]
 .Foo.h

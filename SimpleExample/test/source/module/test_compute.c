@@ -3,7 +3,7 @@
 
 Mock_Vars(5);   // must come before mocks
 
-// The setup function is conventially always present and called- even when it
+// The setup function is conventionally always present and called- even when it
 // is empty.
 static void setUp(void)
 {

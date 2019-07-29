@@ -19,30 +19,63 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
 # THE SOFTWARE.
 # 
-# Except as contained in this notice, the name of NAND Gate Technologies LLC
+# Except as contained in this notice, the name of NAND Gate Technol0gies LLC
 # shall not be used in advertising or otherwise to promote the sale, use or 
 # other dealings in this Software without prior written authorization from 
 # NAND Gate Technologies.
 ###############################################################################
 
-function runTest {
-    echo -e "\n**" $1
-    rm a.out
-    gcc -std=c99 -Wall $1
-    ./a.out
+runManualTests() {
+    :   # this is the null command, remove it when tests manually specified
 }
 
-clear
-runTest testBasic.c
-runTest testValueMock0.c
-runTest testValueMock1.c
-runTest testValueMock2.c
-runTest testValueMock3.c
-runTest testValueMock4.c
-runTest testValueMock5.c
-runTest testVoidMock0.c
-runTest testVoidMock1.c
-runTest testVoidMock2.c
-runTest testVoidMock3.c
-runTest testVoidMock4.c
-runTest testVoidMock5.c
+# These flasgs are appropriate for using the LLVM compiler under OSX and
+# I'm targeting a 32-bit gcc target (e.g. gcc for ARM).
+CC_FLAGS="-std=c99 -Wall -Iinclude -I../app/include"
+
+runTest() {
+    #echo
+    echo "gcc $CC_FLAGS $*"
+    gcc -o test.exe $CC_FLAGS $*
+    ./test.exe
+    testResult=$?
+    rm test.exe
+    if [ $testResult -ne 0 ]; then
+    	exit -1
+    fi
+    
+}
+
+runAutoTests() {
+    testPath="../app/source"${1:+/$1}
+    for sourceFilePath in $(find $testPath -name '*.c'); do
+        # TODO: black list manually specified source files.
+        sourceFileName=${sourceFilePath##*/}
+        sourcePath=${sourceFilePath%/*}
+        modulePath=${sourcePath#*app/}
+        testFileName="test_${sourceFileName}"
+        testFilePath="${modulePath}/$testFileName"
+
+        if [ -e "$testFilePath" ]
+        then
+            runTest $sourceFilePath $testFilePath
+        fi
+    done
+}
+
+rm -f assertions.txt
+if [ -z $1 ]
+then
+    runManualTests
+fi
+
+runAutoTests $1
+
+if [ -e "assertions.txt" ]
+then
+    echo
+    echo -n Total Assertions:
+    cat assertions.txt
+fi
+
+

@@ -37,14 +37,14 @@
 // Version: 0.0.1
 
 
-// TODO: determin the _mockCallHistory array size. depth is the depth for a
-// sigle function, this tracks all functions.  The upper bound is depth *
+// TODO: determine the _mockCallHistory array size. depth is the depth for a
+// single function, this tracks all functions.  The upper bound is depth *
 // number of mocks.
 
 // Issue: How to reset the _mockCallIndex at the start of every test. Prefer
 // somehow reset this auomagically?
 
-// Note: Mocros prefixed with '_' are private to the unit tester and are not
+// Note: Macros prefixed with '_' are private to the unit tester and are not
 // intended to be used by test code directly.
 
 #ifdef __cplusplus
@@ -180,8 +180,8 @@
     }
 
 // TODO
-#define Assett_StrContains(expected, actual) \
-    Assert_Fail("TODO: Assett_StrContains()")
+#define Assert_StrContains(expected, actual) \
+    Assert_Fail("TODO: Assert_StrContains()")
 
 // TODO
 #define Assert_SubString(pos, expected, actual) \
