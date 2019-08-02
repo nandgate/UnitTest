@@ -27,6 +27,10 @@ static void setUp(void)
 {
     // For each test case the mocks need to be reset...
     Mock_Reset(foo_Add);
+
+    // Make sure to initialize ALL of the test state, otherwise you can get
+    // false positives from tests!
+    test_sum = TEST_UNSET;
 }
 
 // Various assertions on the arguments passed to mock functions.
@@ -112,6 +116,47 @@ static void test_CallCustomMock(void)
     Assert_Equals(FOO_FIRST_ARG2 + FOO_SECOND_ARG2, test_sum);
 }
 
+// When several tests have common setup it helps to write a setup function that
+// common to several tests. Normally I put these at the top of the file just
+// below to setUp() function.
+
+static void setUp_commonToSeveralTests(void)
+{
+    // Always call the setUp() function so the mocks are reset and everything
+    // is preset.
+    setUp();
+
+    // Now we can customize the test environment for the tests...
+    Mock_Returns(foo_Add, -1);
+}
+
+static void test_CustomAssert(uint32_t param)
+{
+    // When several tests have the same set of assertions it can be very useful
+    // to put them all in function- with a good name describing the behavior
+    // that the assertions are capturing.
+
+    Assert_Equals(-3, param);
+}
+
+static void test_CustomAssertion(void)
+{
+    // There is no reason to have only one setup for all the tests...
+    setUp_commonToSeveralTests();
+
+    // You can add a note that will be output whenever an assertion fails. This
+    // can be very handy when a suit of tests call a function with custom
+    // assertions common the the tests. Without the note its hard to tell which
+    // test function in the suit failed- the failing assertion will have the
+    // line number of the failing assertion, but the the test suit would be
+    // ambiguous.
+    Assert_Note("test_CustomAssertion");
+
+    foo_Doit();
+
+    test_CustomAssert(-3);
+}
+
 
 int main(int argc, char **argv)
 {
@@ -122,6 +167,8 @@ int main(int argc, char **argv)
     test_ValueFromMock();
     test_SequenceFromMock();
     test_CallCustomMock();
+
+    test_CustomAssertion();
 
     Assert_Save();
     return 0;
