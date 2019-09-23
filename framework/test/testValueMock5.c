@@ -427,10 +427,10 @@ static void test_Pass_AssertAllCalls_Arg5(void) {
     testFn(0, 1, 2, 3, 4);
     testFn(0, 1, 2, 3, 4);
 
-    Assert_AllCalls5(testFn, 4);
+    Assert_AllCallsEquals5(testFn, 4);
     
     if (_assertions != 1) {
-        printf("**Fail: test_Pass_AssertAllCalls_Arg5\n");
+        printf("**Fail: test_Pass_AssertAllCallsEquals_Arg5\n");
         exit(-1);
     }
 }
@@ -443,10 +443,10 @@ static void test_Fail_AssertAllCalls_Arg5(void) {
     testFn(0, 1, 2, 3, 0);
     testFn(0, 2, 3, 4, 4);
 
-    Assert_AllCalls5(testFn, 4);
+    Assert_AllCallsEquals5(testFn, 4);
     
     if (_assertions != 0) {
-        printf("**Fail: test_Fail_AssertAllCalls_Arg5\n");
+        printf("**Fail: test_Fail_AssertAllCallsEquals_Arg5\n");
         exit(-1);
     }    
 }

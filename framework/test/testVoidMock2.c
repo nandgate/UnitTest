@@ -290,10 +290,10 @@ static void test_Pass_AssertAllCalls_Arg2(void) {
     testFn(0, 1);
     testFn(0, 1);
 
-    Assert_AllCalls2(testFn, 1);
+    Assert_AllCallsEquals2(testFn, 1);
     
     if (_assertions != 1) {
-        printf("**Fail: test_Pass_AssertAllCalls_Arg2\n");
+        printf("**Fail: test_Pass_AssertAllCallsEquals_Arg2\n");
         exit(-1);
     }
 }
@@ -305,10 +305,10 @@ static void test_Fail_AssertAllCalls_Arg2(void) {
     testFn(0, 1);
     testFn(1, 2);
 
-    Assert_AllCalls2(testFn, 1);
+    Assert_AllCallsEquals2(testFn, 1);
     
     if (_assertions != 0) {
-        printf("**Fail: test_Fail_AssertAllCalls_Arg2\n");
+        printf("**Fail: test_Fail_AssertAllCallsEquals_Arg2\n");
         exit(-1);
     }    
 }
