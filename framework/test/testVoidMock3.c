@@ -285,7 +285,7 @@ static void test_FailNoCalles_AssertCalledN_Arg3(void) {
     }    
 }
 
-static void test_Pass_AssertAllCalls_Arg3(void) {
+static void test_Pass_AssertAllCallsEquals_Arg3(void) {
     setUp();
 
     testFn(0, 1, 2);
@@ -300,7 +300,7 @@ static void test_Pass_AssertAllCalls_Arg3(void) {
     }
 }
 
-static void test_Fail_AssertAllCalls_Arg3(void) {
+static void test_Fail_AssertAllCallsEquals_Arg3(void) {
     setUp();
 
     testFn(0, 1, 2);
@@ -313,6 +313,66 @@ static void test_Fail_AssertAllCalls_Arg3(void) {
         printf("**Fail: test_Fail_AssertAllCallsEquals_Arg3\n");
         exit(-1);
     }    
+}
+
+static void test_Pass_AssertAllCallsLessThan_Arg3(void) {
+    setUp();
+
+    testFn(1, 1, 0);
+    testFn(2, 2, 1);
+    testFn(3, 3, 2);
+
+    Assert_AllCallsLessThan3(testFn, 3);
+
+    if (_assertions != 1) {
+        printf("**Fail: test_Pass_AssertAllCallsLessThan_Arg3\n");
+        exit(-1);
+    }
+}
+
+static void test_Fail_AssertAllCallsLessThan_Arg3(void) {
+    setUp();
+
+    testFn(1, 1, 0);
+    testFn(2, 2, 1);
+    testFn(3, 3, 2);
+
+    Assert_AllCallsLessThan3(testFn, 2);
+
+    if (_assertions != 0) {
+        printf("**Fail: test_Fail_AssertAllCallsLessThan_Arg3\n");
+        exit(-1);
+    }
+}
+
+static void test_Pass_AssertAllCallsGreaterThan_Arg3(void) {
+    setUp();
+
+    testFn(1, 1, 2);
+    testFn(2, 2, 3);
+    testFn(3, 3, 4);
+
+    Assert_AllCallsGreaterThan3(testFn, 1);
+
+    if (_assertions != 1) {
+        printf("**Fail: test_Pass_AssertAllCallsGreaterThan_Arg3\n");
+        exit(-1);
+    }
+}
+
+static void test_Fail_AssertAllCallsGreaterThan_Arg3(void) {
+    setUp();
+
+    testFn(1, 1, 2);
+    testFn(2, 2, 3);
+    testFn(3, 3, 4);
+
+    Assert_AllCallsGreaterThan3(testFn, 2);
+
+    if (_assertions != 0) {
+        printf("**Fail: test_Fail_AssertAllCallsGreaterThan_Arg3\n");
+        exit(-1);
+    }
 }
 
 static void test_CustomMock_Arg3(void) {
@@ -354,8 +414,14 @@ int main(int argc, char **argv) {
     test_Fail_AssertCalledN_Arg3();
     test_FailNoCalles_AssertCalledN_Arg3();
 
-    test_Pass_AssertAllCalls_Arg3();
-    test_Fail_AssertAllCalls_Arg3();
+    test_Pass_AssertAllCallsEquals_Arg3();
+    test_Fail_AssertAllCallsEquals_Arg3();
+
+    test_Pass_AssertAllCallsLessThan_Arg3();
+    test_Fail_AssertAllCallsLessThan_Arg3();
+
+    test_Pass_AssertAllCallsGreaterThan_Arg3();
+    test_Fail_AssertAllCallsGreaterThan_Arg3();
     
     test_CustomMock_Arg3();
     

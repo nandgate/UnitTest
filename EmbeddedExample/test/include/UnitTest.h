@@ -993,4 +993,174 @@
         _assertions++; \
     }} \
 
+#define Assert_AllCallsLessThan1(fn, arg0) ;{ \
+    bool _match= true; \
+    uint32_t _i; \
+    for (_i= 0; _i < _mock_##fn.callCount; _i++) { \
+        if(_mock_##fn.arg0History[_i] >= (arg0)) { \
+            _match= false; \
+            break; \
+        } \
+    } \
+    if(!_match) { \
+        _Mock_PrintFileLine(); \
+        printf("Assert_AllCallsLessThan1 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg0), (uint32_t)_mock_##fn.arg0History[_i]); \
+        _Mock_Exit(); \
+    } else { \
+        _assertions++; \
+    }} \
+
+#define Assert_AllCallsLessThan2(fn, arg1) ;{ \
+    bool _match= true; \
+    uint32_t _i; \
+    for (_i= 0; _i < _mock_##fn.callCount; _i++) { \
+        if(_mock_##fn.arg1History[_i] >= (arg1)) { \
+            _match= false; \
+            break; \
+        } \
+    } \
+    if(!_match) { \
+        _Mock_PrintFileLine(); \
+        printf("Assert_AllCallsLessThan2 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg1), (uint32_t)_mock_##fn.arg0History[_i]); \
+        _Mock_Exit(); \
+    } else { \
+        _assertions++; \
+    }} \
+
+#define Assert_AllCallsLessThan3(fn, arg2) ;{ \
+    bool _match= true; \
+    uint32_t _i; \
+    for (_i= 0; _i < _mock_##fn.callCount; _i++) { \
+        if(_mock_##fn.arg2History[_i] >= (arg2)) { \
+            _match= false; \
+            break; \
+        } \
+    } \
+    if(!_match) { \
+        _Mock_PrintFileLine(); \
+        printf("Assert_AllCallsLessThan3 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg2), (uint32_t)_mock_##fn.arg0History[_i]); \
+        _Mock_Exit(); \
+    } else { \
+        _assertions++; \
+    }} \
+
+#define Assert_AllCallsLessThan4(fn, arg3) ;{ \
+    bool _match= true; \
+    uint32_t _i; \
+    for (_i= 0; _i < _mock_##fn.callCount; _i++) { \
+        if(_mock_##fn.arg3History[_i] >= (arg3)) { \
+            _match= false; \
+            break; \
+        } \
+    } \
+    if(!_match) { \
+        _Mock_PrintFileLine(); \
+        printf("Assert_AllCallsLessThan4 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg3), (uint32_t)_mock_##fn.arg0History[_i]); \
+        _Mock_Exit(); \
+    } else { \
+        _assertions++; \
+    }} \
+
+#define Assert_AllCallsLessThan5(fn, arg4) ;{ \
+    bool _match= true; \
+    uint32_t _i; \
+    for (_i= 0; _i < _mock_##fn.callCount; _i++) { \
+        if(_mock_##fn.arg4History[_i] >= (arg4)) { \
+            _match= false; \
+            break; \
+        } \
+    } \
+    if(!_match) { \
+        _Mock_PrintFileLine(); \
+        printf("Assert_AllCallsLessThan5 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg4), (uint32_t)_mock_##fn.arg0History[_i]); \
+        _Mock_Exit(); \
+    } else { \
+        _assertions++; \
+    }} \
+
+#define Assert_AllCallsGreaterThan1(fn, arg0) ;{ \
+    bool _match= true; \
+    uint32_t _i; \
+    for (_i= 0; _i < _mock_##fn.callCount; _i++) { \
+        if(_mock_##fn.arg0History[_i] <= (arg0)) { \
+            _match= false; \
+            break; \
+        } \
+    } \
+    if(!_match) { \
+        _Mock_PrintFileLine(); \
+        printf("Assert_AllCallsGreaterThan1 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg0), (uint32_t)_mock_##fn.arg0History[_i]); \
+        _Mock_Exit(); \
+    } else { \
+        _assertions++; \
+    }} \
+
+#define Assert_AllCallsGreaterThan2(fn, arg1) ;{ \
+    bool _match= true; \
+    uint32_t _i; \
+    for (_i= 0; _i < _mock_##fn.callCount; _i++) { \
+        if(_mock_##fn.arg1History[_i] <= (arg1)) { \
+            _match= false; \
+            break; \
+        } \
+    } \
+    if(!_match) { \
+        _Mock_PrintFileLine(); \
+        printf("Assert_AllCallsGreaterThan2 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg1), (uint32_t)_mock_##fn.arg0History[_i]); \
+        _Mock_Exit(); \
+    } else { \
+        _assertions++; \
+    }} \
+
+#define Assert_AllCallsGreaterThan3(fn, arg2) ;{ \
+    bool _match= true; \
+    uint32_t _i; \
+    for (_i= 0; _i < _mock_##fn.callCount; _i++) { \
+        if(_mock_##fn.arg2History[_i] <= (arg2)) { \
+            _match= false; \
+            break; \
+        } \
+    } \
+    if(!_match) { \
+        _Mock_PrintFileLine(); \
+        printf("Assert_AllCallsGreaterThan3 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg2), (uint32_t)_mock_##fn.arg0History[_i]); \
+        _Mock_Exit(); \
+    } else { \
+        _assertions++; \
+    }} \
+
+#define Assert_AllCallsGreaterThan4(fn, arg3) ;{ \
+    bool _match= true; \
+    uint32_t _i; \
+    for (_i= 0; _i < _mock_##fn.callCount; _i++) { \
+        if(_mock_##fn.arg3History[_i] <= (arg3)) { \
+            _match= false; \
+            break; \
+        } \
+    } \
+    if(!_match) { \
+        _Mock_PrintFileLine(); \
+        printf("Assert_AllCallsGreaterThan4 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg3), (uint32_t)_mock_##fn.arg0History[_i]); \
+        _Mock_Exit(); \
+    } else { \
+        _assertions++; \
+    }} \
+
+#define Assert_AllCallsGreaterThan5(fn, arg4) ;{ \
+    bool _match= true; \
+    uint32_t _i; \
+    for (_i= 0; _i < _mock_##fn.callCount; _i++) { \
+        if(_mock_##fn.arg4History[_i] <= (arg4)) { \
+            _match= false; \
+            break; \
+        } \
+    } \
+    if(!_match) { \
+        _Mock_PrintFileLine(); \
+        printf("Assert_AllCallsGreaterThan5 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg4), (uint32_t)_mock_##fn.arg0History[_i]); \
+        _Mock_Exit(); \
+    } else { \
+        _assertions++; \
+    }} \
+
 #endif

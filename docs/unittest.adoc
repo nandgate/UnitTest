@@ -138,10 +138,10 @@ implementation.
 
 == Life Cycle
 === Assert_Init()
-**TODO**
+Initializes the test framework for running the suit of tests.
 
 === Assert_Save()
-**TODO**
+Finalizes the test framework after running the suit of tests.
 
 == Asserts
 === Assert_ArrayEquals(len, expected, actual)
@@ -1083,6 +1083,142 @@ int main(int argc, char **argv) {
 
     test_Bar();
     
+    test_Save();
+    return 0;
+}
+----
+
+=== Assert_AllCallsLessThan1(fn, arg0)
+=== Assert_AllCallsLessThan2(fn, arg1)
+=== Assert_AllCallsLessThan3(fn, arg2)
+=== Assert_AllCallsLessThan4(fn, arg3)
+=== Assert_AllCallsLessThan5(fn, arg4)
+Asserts that all invocation of the mock have an argument less than a value.
+
+[source,C]
+.Foo.h
+----
+#pragma once
+void Foo(uint8_t a, uint32_t b);
+----
+
+.Bar.h
+----
+#pragma once
+void Bar(void);
+----
+
+[source,C]
+.Bar.c
+----
+#include "Foo.h"
+
+void Bar(void)
+{
+    Foo(1, 40);
+    Foo(2, 42);
+    Foo(3, 0);
+}
+----
+
+[source,C]
+.test_Bar.c
+----
+#include "Bar.h"
+#include "Foo.h"
+#include "UnitTest.h"
+
+Mock_Vars(1);
+
+Mock_Void2(Foo, uint8_t, uint32_t);
+
+static void setUp(void)
+{
+    Mock_Reset(Foo);
+}
+
+static void test_Bar(void)
+{
+    setUp();
+
+    Bar();
+
+    Assert_AllCallsLessThan2(Foo, 42);
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_Bar();
+
+    test_Save();
+    return 0;
+}
+----
+
+=== Assert_AllCallsGreaterThan1(fn, arg0)
+=== Assert_AllCallsGreaterThan2(fn, arg1)
+=== Assert_AllCallsGreaterThan3(fn, arg2)
+=== Assert_AllCallsGreaterThan4(fn, arg3)
+=== Assert_AllCallsGreaterThan5(fn, arg4)
+Asserts that all invocation of the mock have an argument greater than a value.
+
+[source,C]
+.Foo.h
+----
+#pragma once
+void Foo(uint8_t a, uint32_t b);
+----
+
+.Bar.h
+----
+#pragma once
+void Bar(void);
+----
+
+[source,C]
+.Bar.c
+----
+#include "Foo.h"
+
+void Bar(void)
+{
+    Foo(1, 40);
+    Foo(2, 42);
+    Foo(3, 41);
+}
+----
+
+[source,C]
+.test_Bar.c
+----
+#include "Bar.h"
+#include "Foo.h"
+#include "UnitTest.h"
+
+Mock_Vars(1);
+
+Mock_Void2(Foo, uint8_t, uint32_t);
+
+static void setUp(void)
+{
+    Mock_Reset(Foo);
+}
+
+static void test_Bar(void)
+{
+    setUp();
+
+    Bar();
+
+    Assert_AllCallsLessThan2(Foo, 24);
+}
+
+int main(int argc, char **argv) {
+    test_Init();
+
+    test_Bar();
+
     test_Save();
     return 0;
 }

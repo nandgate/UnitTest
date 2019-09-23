@@ -282,7 +282,7 @@ static void test_FailNoCalles_AssertCalledN_Arg1(void) {
     }    
 }
 
-static void test_Pass_AssertAllCalls_Arg1(void) {
+static void test_Pass_AssertAllCallsEquals_Arg1(void) {
     setUp();
 
     testFn(0);
@@ -297,7 +297,7 @@ static void test_Pass_AssertAllCalls_Arg1(void) {
     }
 }
 
-static void test_Fail_AssertAllCalls_Arg1(void) {
+static void test_Fail_AssertAllCallsEquals_Arg1(void) {
     setUp();
 
     testFn(0);
@@ -310,6 +310,66 @@ static void test_Fail_AssertAllCalls_Arg1(void) {
         printf("**Fail: test_Fail_AssertAllCallsEquals_Arg1\n");
         exit(-1);
     }    
+}
+
+static void test_Pass_AssertAllCallsLessThan_Arg1(void) {
+    setUp();
+
+    testFn(0);
+    testFn(1);
+    testFn(2);
+
+    Assert_AllCallsLessThan1(testFn, 3);
+
+    if (_assertions != 1) {
+        printf("**Fail: test_Pass_AssertAllCallsLessThan_Arg1\n");
+        exit(-1);
+    }
+}
+
+static void test_Fail_AssertAllCallsLessThan_Arg1(void) {
+    setUp();
+
+    testFn(0);
+    testFn(1);
+    testFn(2);
+
+    Assert_AllCallsLessThan1(testFn, 2);
+
+    if (_assertions != 0) {
+        printf("**Fail: test_Fail_AssertAllCallsLessThan_Arg1\n");
+        exit(-1);
+    }
+}
+
+static void test_Pass_AssertAllCallsGreaterThan_Arg1(void) {
+    setUp();
+
+    testFn(2);
+    testFn(3);
+    testFn(4);
+
+    Assert_AllCallsGreaterThan1(testFn, 1);
+
+    if (_assertions != 1) {
+        printf("**Fail: test_Pass_AssertAllCallsGreaterThan_Arg1\n");
+        exit(-1);
+    }
+}
+
+static void test_Fail_AssertAllCallsGreaterThan_Arg1(void) {
+    setUp();
+
+    testFn(2);
+    testFn(3);
+    testFn(4);
+
+    Assert_AllCallsGreaterThan1(testFn, 2);
+
+    if (_assertions != 0) {
+        printf("**Fail: test_Fail_AssertAllCallsGreaterThan_Arg1\n");
+        exit(-1);
+    }
 }
 
 static void test_CustomMock_Arg1(void) {
@@ -351,9 +411,15 @@ int main(int argc, char **argv) {
     test_Fail_AssertCalledN_Arg1();    
     test_FailNoCalles_AssertCalledN_Arg1();    
     
-    test_Pass_AssertAllCalls_Arg1();
-    test_Fail_AssertAllCalls_Arg1();    
-    
+    test_Pass_AssertAllCallsEquals_Arg1();
+    test_Fail_AssertAllCallsEquals_Arg1();
+
+    test_Pass_AssertAllCallsLessThan_Arg1();
+    test_Fail_AssertAllCallsLessThan_Arg1();
+
+    test_Pass_AssertAllCallsGreaterThan_Arg1();
+    test_Fail_AssertAllCallsGreaterThan_Arg1();
+
     test_CustomMock_Arg1();
     
     printf("**Tests complete\n");

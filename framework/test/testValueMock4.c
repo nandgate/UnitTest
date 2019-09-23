@@ -417,7 +417,7 @@ static void test_FailNoCalles_AssertCalledN_Arg4(void) {
     }    
 }
 
-static void test_Pass_AssertAllCalls_Arg4(void) {
+static void test_Pass_AssertAllCallsEquals_Arg4(void) {
     setUp();
     Mock_Returns(testFn, 1);
 
@@ -433,7 +433,7 @@ static void test_Pass_AssertAllCalls_Arg4(void) {
     }
 }
 
-static void test_Fail_AssertAllCalls_Arg4(void) {
+static void test_Fail_AssertAllCallsEquals_Arg4(void) {
     setUp();
     Mock_Returns(testFn, 1);
 
@@ -447,6 +447,70 @@ static void test_Fail_AssertAllCalls_Arg4(void) {
         printf("**Fail: test_Fail_AssertAllCallsEquals_Arg4\n");
         exit(-1);
     }    
+}
+
+static void test_Pass_AssertAllCallsLessThan_Arg4(void) {
+    setUp();
+    Mock_Returns(testFn, 1);
+
+    testFn(1, 1, 1, 0);
+    testFn(2, 2, 2, 1);
+    testFn(3, 3, 3, 2);
+
+    Assert_AllCallsLessThan4(testFn, 3);
+
+    if (_assertions != 1) {
+        printf("**Fail: test_Pass_AssertAllCallsLessThan_Arg4\n");
+        exit(-1);
+    }
+}
+
+static void test_Fail_AssertAllCallsLessThan_Arg4(void) {
+    setUp();
+    Mock_Returns(testFn, 1);
+
+    testFn(1, 1, 1, 0);
+    testFn(2, 2, 2, 1);
+    testFn(3, 3, 3, 2);
+
+    Assert_AllCallsLessThan4(testFn, 2);
+
+    if (_assertions != 0) {
+        printf("**Fail: test_Fail_AssertAllCallsLessThan_Arg4\n");
+        exit(-1);
+    }
+}
+
+static void test_Pass_AssertAllCallsGreaterThan_Arg4(void) {
+    setUp();
+    Mock_Returns(testFn, 1);
+
+    testFn(1, 1, 1, 2);
+    testFn(2, 2, 2, 3);
+    testFn(3, 3, 3, 4);
+
+    Assert_AllCallsGreaterThan4(testFn, 1);
+
+    if (_assertions != 1) {
+        printf("**Fail: test_Pass_AssertAllCallsGreaterThan_Arg4\n");
+        exit(-1);
+    }
+}
+
+static void test_Fail_AssertAllCallsGreaterThan_Arg4(void) {
+    setUp();
+    Mock_Returns(testFn, 1);
+
+    testFn(1, 1, 1, 2);
+    testFn(2, 2, 2, 3);
+    testFn(3, 3, 3, 4);
+
+    Assert_AllCallsGreaterThan4(testFn, 2);
+
+    if (_assertions != 0) {
+        printf("**Fail: test_Fail_AssertAllCallsGreaterThan_Arg4\n");
+        exit(-1);
+    }
 }
 
 static void test_CustomMock_Arg4(void) {
@@ -496,8 +560,14 @@ int main(int argc, char **argv) {
     test_Fail_AssertCalledN_Arg4();
     test_FailNoCalles_AssertCalledN_Arg4();
 
-    test_Pass_AssertAllCalls_Arg4();
-    test_Fail_AssertAllCalls_Arg4();
+    test_Pass_AssertAllCallsEquals_Arg4();
+    test_Fail_AssertAllCallsEquals_Arg4();
+
+    test_Pass_AssertAllCallsLessThan_Arg4();
+    test_Fail_AssertAllCallsLessThan_Arg4();
+
+    test_Pass_AssertAllCallsGreaterThan_Arg4();
+    test_Fail_AssertAllCallsGreaterThan_Arg4();
     
     test_CustomMock_Arg4();
     
