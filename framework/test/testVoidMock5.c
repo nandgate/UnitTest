@@ -36,7 +36,7 @@ void fake_testFn(uint8_t arg0, uint8_t arg1, uint8_t arg2, uint8_t arg3, uint8_t
     Assert_Equals(2, arg1);
     Assert_Equals(3, arg2);
     Assert_Equals(4, arg3);
-    Assert_Equals(4, arg4);
+    Assert_Equals(5, arg4);
     wasFakeCalled= true;
 }
 
