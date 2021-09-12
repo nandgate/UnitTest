@@ -34,7 +34,7 @@
 #include <string.h>
 
 // UnitTest
-// Version: 0.0.1
+// Version: 0.0.2
 
 
 // TODO: determine the _mockCallHistory array size. depth is the depth for a
