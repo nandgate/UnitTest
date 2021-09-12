@@ -381,7 +381,7 @@
         ret_t (*customMock)(void); \
         bool isReturnSet; \
         ret_t retHistory[_mockDepth]; \
-        uint32_t returnValue; \
+        ret_t returnValue; \
         uint32_t sequenceLength; \
         uint32_t sequenceIdx; \
         ret_t *sequence; \
