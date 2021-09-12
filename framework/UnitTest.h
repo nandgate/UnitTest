@@ -392,7 +392,7 @@
             _mock_##fn.retHistory[_mock_##fn.callCount-1]= _mock_##fn.customMock(); \
             return  _mock_##fn.retHistory[_mock_##fn.callCount-1]; \
         } \
-        else _Mock_Return(fn); \
+        else { _Mock_Return(fn); }\
     }
     END_EXTERN_C
 
@@ -416,7 +416,7 @@
             _mock_##fn.retHistory[_mock_##fn.callCount-1]= _mock_##fn.customMock(arg0); \
             return  _mock_##fn.retHistory[_mock_##fn.callCount-1]; \
         } \
-        else _Mock_Return(fn); \
+        else { _Mock_Return(fn); } \
     } \
     END_EXTERN_C
 
@@ -443,7 +443,7 @@
             _mock_##fn.retHistory[_mock_##fn.callCount-1]= _mock_##fn.customMock(arg0, arg1); \
             return  _mock_##fn.retHistory[_mock_##fn.callCount-1]; \
         } \
-        else _Mock_Return(fn); \
+        else { _Mock_Return(fn); } \
     } \
     END_EXTERN_C
 
@@ -471,7 +471,7 @@
             _mock_##fn.retHistory[_mock_##fn.callCount-1]= _mock_##fn.customMock(arg0, arg1, arg2); \
             return  _mock_##fn.retHistory[_mock_##fn.callCount-1]; \
         } \
-        else _Mock_Return(fn); \
+        else { _Mock_Return(fn); } \
     }
     END_EXTERN_C
 
@@ -501,7 +501,7 @@
             _mock_##fn.retHistory[_mock_##fn.callCount-1]= _mock_##fn.customMock(arg0, arg1, arg2, arg3); \
             return  _mock_##fn.retHistory[_mock_##fn.callCount-1]; \
         } \
-        else _Mock_Return(fn); \
+        else { _Mock_Return(fn); } \
     } \
     END_EXTERN_C
 
@@ -533,7 +533,7 @@
             _mock_##fn.retHistory[_mock_##fn.callCount-1]= _mock_##fn.customMock(arg0, arg1, arg2, arg3, arg4); \
             return  _mock_##fn.retHistory[_mock_##fn.callCount-1]; \
         } \
-        else _Mock_Return(fn); \
+        else { _Mock_Return(fn); } \
     } \
     END_EXTERN_C
 
