@@ -61,7 +61,9 @@
     uint32_t _assertions; \
     char *_note= NULL; \
     bool _mockExit= true; \
-    enum { _mockDepth= depth } \
+    enum { _mockDepth= depth };\
+    uint32_t _callOrderIndex = 0;  \
+    void* _callOrder[depth*2];   \
     END_EXTERN_C
 
 #define _Mock_Exit() \
@@ -205,6 +207,14 @@
         _Mock_Exit() \
     }
 
+#define _Mock_RecordCallOrder(fn) \
+    if (_callOrderIndex < (_mockDepth*2)) { \
+        _callOrder[_callOrderIndex++] = fn; \
+    } else { \
+        printf("Mock_Depth failed: %s, depth: %d\n", #fn, _mockDepth); \
+        _Mock_Exit() \
+    }
+
 #define Assert_Init() ;{ \
     FILE* _f= fopen("assertions.txt", "r"); \
     _initAssertions= 0; \
@@ -236,7 +246,8 @@
         void (*customMock)(void); \
     } _mock_##fn;\
     void fn(void) { \
-        _Mock_IncCallCount(fn); \
+        _Mock_IncCallCount(fn);   \
+        _Mock_RecordCallOrder(fn); \
         if(_mock_##fn.customMock) { \
             return _mock_##fn.customMock(); \
         } \
@@ -253,6 +264,7 @@
     void fn(arg0_t arg0) { \
         _mock_##fn.arg0History[_mock_##fn.callCount]= arg0; \
         _Mock_IncCallCount(fn); \
+        _Mock_RecordCallOrder(fn); \
         if(_mock_##fn.customMock) { \
             return _mock_##fn.customMock(arg0); \
         } \
@@ -271,6 +283,7 @@
         _mock_##fn.arg0History[_mock_##fn.callCount]= arg0; \
         _mock_##fn.arg1History[_mock_##fn.callCount]= arg1; \
         _Mock_IncCallCount(fn); \
+        _Mock_RecordCallOrder(fn); \
         if(_mock_##fn.customMock) { \
             return _mock_##fn.customMock(arg0, arg1); \
         } \
@@ -291,6 +304,7 @@
         _mock_##fn.arg1History[_mock_##fn.callCount]= arg1; \
         _mock_##fn.arg2History[_mock_##fn.callCount]= arg2; \
         _Mock_IncCallCount(fn); \
+        _Mock_RecordCallOrder(fn); \
         if(_mock_##fn.customMock) { \
             return _mock_##fn.customMock(arg0, arg1, arg2); \
         } \
@@ -313,6 +327,7 @@
         _mock_##fn.arg2History[_mock_##fn.callCount]= arg2; \
         _mock_##fn.arg3History[_mock_##fn.callCount]= arg3; \
         _Mock_IncCallCount(fn); \
+        _Mock_RecordCallOrder(fn); \
         if(_mock_##fn.customMock) { \
             return _mock_##fn.customMock(arg0, arg1, arg2, arg3); \
         } \
@@ -337,6 +352,7 @@
         _mock_##fn.arg3History[_mock_##fn.callCount]= arg3; \
         _mock_##fn.arg4History[_mock_##fn.callCount]= arg4; \
         _Mock_IncCallCount(fn); \
+        _Mock_RecordCallOrder(fn); \
         if(_mock_##fn.customMock) { \
             return _mock_##fn.customMock(arg0, arg1, arg2, arg3, arg4); \
         } \
@@ -361,6 +377,9 @@
 
 #define Mock_Reset(fn) \
     memset(&_mock_##fn, 0, sizeof(_mock_##fn))
+
+#define Mock_CallOrderReset() \
+    _callOrderIndex = 0
 
 #define Mock_Custom(fn, custom) \
     _mock_##fn.customMock= custom
@@ -388,6 +407,7 @@
     } _mock_##fn; \
     ret_t fn(void) { \
         _Mock_IncCallCount(fn); \
+        _Mock_RecordCallOrder(fn); \
         if(_mock_##fn.customMock) { \
             _mock_##fn.retHistory[_mock_##fn.callCount-1]= _mock_##fn.customMock(); \
             return  _mock_##fn.retHistory[_mock_##fn.callCount-1]; \
@@ -412,6 +432,7 @@
     ret_t fn(arg0_t arg0) { \
         _mock_##fn.arg0History[_mock_##fn.callCount]= arg0; \
         _Mock_IncCallCount(fn); \
+        _Mock_RecordCallOrder(fn); \
         if(_mock_##fn.customMock) { \
             _mock_##fn.retHistory[_mock_##fn.callCount-1]= _mock_##fn.customMock(arg0); \
             return  _mock_##fn.retHistory[_mock_##fn.callCount-1]; \
@@ -439,6 +460,7 @@
         _mock_##fn.arg0History[_mock_##fn.callCount]= arg0; \
         _mock_##fn.arg1History[_mock_##fn.callCount]= arg1; \
         _Mock_IncCallCount(fn); \
+        _Mock_RecordCallOrder(fn); \
         if(_mock_##fn.customMock) { \
             _mock_##fn.retHistory[_mock_##fn.callCount-1]= _mock_##fn.customMock(arg0, arg1); \
             return  _mock_##fn.retHistory[_mock_##fn.callCount-1]; \
@@ -467,6 +489,7 @@
         _mock_##fn.arg1History[_mock_##fn.callCount]= arg1; \
         _mock_##fn.arg2History[_mock_##fn.callCount]= arg2; \
         _Mock_IncCallCount(fn); \
+        _Mock_RecordCallOrder(fn); \
         if(_mock_##fn.customMock) { \
             _mock_##fn.retHistory[_mock_##fn.callCount-1]= _mock_##fn.customMock(arg0, arg1, arg2); \
             return  _mock_##fn.retHistory[_mock_##fn.callCount-1]; \
@@ -497,6 +520,7 @@
         _mock_##fn.arg2History[_mock_##fn.callCount]= arg2; \
         _mock_##fn.arg3History[_mock_##fn.callCount]= arg3; \
         _Mock_IncCallCount(fn); \
+        _Mock_RecordCallOrder(fn); \
         if(_mock_##fn.customMock) { \
             _mock_##fn.retHistory[_mock_##fn.callCount-1]= _mock_##fn.customMock(arg0, arg1, arg2, arg3); \
             return  _mock_##fn.retHistory[_mock_##fn.callCount-1]; \
@@ -529,6 +553,7 @@
         _mock_##fn.arg3History[_mock_##fn.callCount]= arg3; \
         _mock_##fn.arg4History[_mock_##fn.callCount]= arg4; \
         _Mock_IncCallCount(fn); \
+        _Mock_RecordCallOrder(fn); \
         if(_mock_##fn.customMock) { \
             _mock_##fn.retHistory[_mock_##fn.callCount-1]= _mock_##fn.customMock(arg0, arg1, arg2, arg3, arg4); \
             return  _mock_##fn.retHistory[_mock_##fn.callCount-1]; \
@@ -581,8 +606,39 @@
     }
 
 
-#define Assert_CallOrder(fn1st, fn2nd) \
-    Assert_Fail("TODO: Assert_CallOrder()")
+#define Assert_CallOrder(fn1st, fn2nd) { \
+        int32_t _1stIndex = -1; \
+        int32_t _2ndIndex = -1; \
+        for(int32_t _i= 0; _i<_callOrderIndex; _i++) { \
+            if (fn1st == _callOrder[_i]) { \
+                _1stIndex = _i; \
+                break; \
+            } \
+        } \
+        for(int32_t _i=0; _i<_callOrderIndex; _i++) { \
+            if (fn2nd == _callOrder[_i]) { \
+                _2ndIndex = _i; \
+                break; \
+            } \
+        } \
+        if(_1stIndex < 0) { \
+            _Mock_PrintFileLine(); \
+            printf("Assert_CallOrder failed: 1st is %s, was not called\n", #fn1st); \
+            _Mock_Exit(); \
+        } \
+        else if(_2ndIndex < 0) { \
+            _Mock_PrintFileLine(); \
+            printf("Assert_CallOrder failed: 2nd is %s, was not called\n", #fn2nd); \
+            _Mock_Exit(); \
+        } \
+        else if(_2ndIndex <= _1stIndex) { \
+            _Mock_PrintFileLine(); \
+            printf("Assert_CallOrder failed: 1st is %s called at: %d, 2nd is %s called at: %d\n", #fn1st, _1stIndex, #fn2nd, _2ndIndex); \
+            _Mock_Exit(); \
+        } else { \
+            _assertions++; \
+        } \
+    }
 
 #define Assert_Called0(fn) ;{\
     if(_mock_##fn.callCount == 0) { \

@@ -51,6 +51,21 @@ static void test_MockDepth_Void_Arg0(void) {
     }
 }
 
+static void test_MockOrder_Void_Arg0(void) {
+    setUp();
+    Mock_CallOrderReset();
+
+    testFn();
+
+    Assert_Equals(1, _callOrderIndex);
+    Assert_True(&testFn == _callOrder[0]);
+    if (_assertions != 2) {
+        printf("**Fail: test_MockOrder_Void_Arg0\n");
+        exit(-1);
+    }
+
+}
+
 static void test_Pass_AssertCallCount_Arg0(void) {
     setUp();
     Assert_CallCount(0, testFn);
@@ -167,6 +182,7 @@ static void test_CustomMock_Arg0(void) {
 
 int main(int argc, char **argv) {
     test_MockDepth_Void_Arg0();
+    test_MockOrder_Void_Arg0();
     
     test_Pass_AssertCallCount_Arg0();
     test_Fail_AssertCallCount_Arg0();

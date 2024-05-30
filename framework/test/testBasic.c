@@ -26,11 +26,14 @@
 
 #include "../UnitTest.h"
 
-Mock_Vars(0);
+Mock_Vars(2);
+
+Mock_Void(test_Mock);
+Mock_Void(test_Mock2);
 
 static void setUp(void) {
     _assertions= 0;
-    _mockExit= false;    
+    _mockExit= false;
 }
 
 static void test_Pass_AssertArrayEquals(void) {
@@ -310,6 +313,88 @@ static void test_InitSave(void) {
 
 }
 
+static void test_Mock_Reset(void) {
+    setUp();
+    _mock_test_Mock.callCount = 1;
+
+    Mock_Reset(test_Mock);
+
+    Assert_Equals(0, _mock_test_Mock.callCount);
+}
+
+static void test_Mock_CallOrderReset(void) {
+    setUp();
+    _callOrderIndex= 1;
+
+    Mock_CallOrderReset();
+
+    Assert_Equals(0, _callOrderIndex);
+}
+
+static void test_Mock_CallOrderPass(void) {
+    setUp();
+    Mock_Reset(test_Mock);
+    Mock_Reset(test_Mock2);
+    Mock_CallOrderReset();
+
+    test_Mock();
+    test_Mock2();
+
+    Assert_CallOrder(test_Mock, test_Mock2);
+    if (_assertions != 1) {
+        printf("**Fail: test_Mock_CallOrderPass\n");
+        exit(-1);
+    }
+}
+
+static void test_Mock_CallOrderFail(void) {
+    setUp();
+    Mock_Reset(test_Mock);
+    Mock_Reset(test_Mock2);
+    Mock_CallOrderReset();
+
+    test_Mock2();
+    test_Mock();
+
+    Assert_CallOrder(test_Mock, test_Mock2);
+    if (_assertions != 0) {
+        printf("**Fail: test_Mock_CallOrderFail\n");
+        exit(-1);
+    }
+}
+
+static void test_Mock_CallOrder1stNotCalled(void) {
+    setUp();
+    Mock_Reset(test_Mock);
+    Mock_Reset(test_Mock2);
+    Mock_CallOrderReset();
+
+    test_Mock();
+
+    Assert_CallOrder(test_Mock2, test_Mock);
+    if (_assertions != 0) {
+        printf("**Fail: test_Mock_CallOrder1stNotCalled\n");
+        exit(-1);
+    }
+}
+
+static void test_Mock_CallOrder2ndNotCalled(void) {
+    setUp();
+    Mock_Reset(test_Mock);
+    Mock_Reset(test_Mock2);
+    Mock_CallOrderReset();
+
+    test_Mock();
+
+    Assert_CallOrder(test_Mock, test_Mock2);
+    if (_assertions != 0) {
+        printf("**Fail: test_Mock_CallOrder2ndNotCalled\n");
+        exit(-1);
+    }
+
+}
+
+
 int main(int argc, char **argv) {
     test_Pass_AssertArrayEquals();
     test_Fail_AssertArrayEquals();
@@ -345,7 +430,14 @@ int main(int argc, char **argv) {
     test_Fail_AssertTrue();
     
     test_InitSave();
-    
+
+    test_Mock_Reset();
+    test_Mock_CallOrderReset();
+    test_Mock_CallOrderPass();
+    test_Mock_CallOrderFail();
+    test_Mock_CallOrder1stNotCalled();
+    test_Mock_CallOrder2ndNotCalled();
+
     printf("**Tests complete\n");
     return 0;
 }
