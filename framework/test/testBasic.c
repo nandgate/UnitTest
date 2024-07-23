@@ -30,6 +30,7 @@ Mock_Vars(2);
 
 Mock_Void(test_Mock);
 Mock_Void(test_Mock2);
+Mock_Value(int, test_MockValue);
 
 static void setUp(void) {
     _assertions= 0;
@@ -391,9 +392,23 @@ static void test_Mock_CallOrder2ndNotCalled(void) {
         printf("**Fail: test_Mock_CallOrder2ndNotCalled\n");
         exit(-1);
     }
-
 }
 
+static void test_Mock_Switch_ReturnSequence_To_ReturnValue(void) {
+    int test_seq[]= {1, 2};
+    setUp();
+    Mock_Reset(test_MockValue);
+    Mock_ReturnsSequence(test_MockValue, 2, test_seq);   // set return sequence
+    Mock_Returns(test_MockValue, 3);     // then set a return value
+
+    int result = test_MockValue();       // verify the return value, not the sequence
+
+    Assert_Equals(3, result);
+    if (_assertions == 0) {
+        printf("**Fail: test_Mock_Switch_ReturnSequence_To_ReturnValue\n");
+        exit(-1);
+    }
+}
 
 int main(int argc, char **argv) {
     test_Pass_AssertArrayEquals();
@@ -437,6 +452,8 @@ int main(int argc, char **argv) {
     test_Mock_CallOrderFail();
     test_Mock_CallOrder1stNotCalled();
     test_Mock_CallOrder2ndNotCalled();
+
+    test_Mock_Switch_ReturnSequence_To_ReturnValue();
 
     printf("**Tests complete\n");
     return 0;

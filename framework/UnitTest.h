@@ -135,7 +135,7 @@
 #define Assert_NotEquals(expected, actual) \
     if ((expected) == (actual)) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_NotEquals failed. Expected: 0x%08x, Actual: 0x%08x\n", (uint32_t)(expected), (uint32_t)(actual)); \
+        printf("Assert_NotEquals failed. Expected: 0x%08x, Actual: 0x%08x\n", (expected), (actual)); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -385,6 +385,7 @@
     _mock_##fn.customMock= custom
 
 #define Mock_Returns(fn,retValue) \
+    _mock_##fn.sequenceLength= 0; \
     _mock_##fn.returnValue= retValue; \
     _mock_##fn.isReturnSet= true
 
