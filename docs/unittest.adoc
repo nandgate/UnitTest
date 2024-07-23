@@ -743,8 +743,49 @@ int main(int argc, char **argv) {
 }
 ----
 
-=== Assert_CallOrder(fn1st, fn2nd) TODO
-Asserts the order that two mock are called.
+=== Assert_CallOrder(fn1st, fn2nd)
+Asserts the order that two mocks are called.
+
+[source,C]
+.test.c
+----
+#include "UnitTest.h"
+
+Mock_Vars(5);
+
+Mock_Void(Foo);
+Mock_Void(Bar);
+
+static void testOrder(void) {
+    foo();
+    bard();
+}
+
+static void setUp(void)
+{
+    Mock_Reset(Foo);
+    Mock_Reset(Bar);
+}
+
+static void test(void)
+{
+    setUp();
+
+    tetestOrderst();
+
+    Assert_CallOrder(Foo, Bar);     // Assertion will pass
+    Assert_CallOrder(Bar, Foo);     // Assertion will fail
+}
+
+int main(int argc, char **argv) {
+    setUp();
+
+    test();
+
+    return 0;
+}
+----
+
 
 === Assert_Called1(fn, arg0)
 === Assert_Called2(fn, arg0, arg1)
