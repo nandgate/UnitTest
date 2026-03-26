@@ -167,7 +167,6 @@ static void test_MockDepth_Value_Arg1(void) {
 
 static void test_MockOrder_Value_Arg1(void) {
     setUp();
-    Mock_CallOrderReset();
 
     testFn(0);
 
@@ -236,7 +235,7 @@ static void test_Fail_AssertCalledOnce_Arg1(void) {
     Assert_CalledOnce(testFn);
 
     if (_assertions != 0) {
-        printf("**Fail: test_Pass_AssertCalledOnce_Arg1\n");
+        printf("**Fail: test_Fail_AssertCalledOnce_Arg1\n");
         exit(-1);
     }
 }
@@ -337,7 +336,7 @@ static void test_FailNoCalles_AssertCalledFirst_Arg1() {
     Assert_CalledFirst1(testFn, 0);
     
     if (_assertions != 0) {
-        printf("**Fail: test_Fail_AssertCalledFirst_Arg1\n");
+        printf("**Fail: test_FailNoCalles_AssertCalledFirst_Arg1\n");
         exit(-1);
     }    
 }
@@ -394,7 +393,7 @@ static void test_Pass_AssertCalledN_Arg1(void) {
     Assert_CalledN1(2, testFn, 1);
     
     if (_assertions != 1) {
-        printf("**Fail: test_Pass_AssertCalledLast_Arg1\n");
+        printf("**Fail: test_Pass_AssertCalledN_Arg1\n");
         exit(-1);
     }
 }
@@ -409,7 +408,7 @@ static void test_Fail_AssertCalledN_Arg1(void) {
     Assert_CalledN1(2, testFn, 1);
     
     if (_assertions != 0) {
-        printf("**Fail: test_Fail_AssertCalledLast_Arg1\n");
+        printf("**Fail: test_Fail_AssertCalledN_Arg1\n");
         exit(-1);
     }    
 }
@@ -421,7 +420,7 @@ static void test_FailNoCalles_AssertCalledN_Arg1(void) {
     Assert_CalledN1(2, testFn, 0);
     
     if (_assertions != 0) {
-        printf("**Fail: test_FailNoCalles_AssertCalledLast_Arg1\n");
+        printf("**Fail: test_FailNoCalles_AssertCalledN_Arg1\n");
         exit(-1);
     }    
 }

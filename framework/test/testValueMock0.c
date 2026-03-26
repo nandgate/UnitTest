@@ -37,6 +37,7 @@ uint8_t fake_testFn(void) {
 static void setUp(void) {
     _assertions= 0;
     _mockExit= false;
+    Test_Init();
     
     Mock_Reset(testFn);
 }
@@ -161,7 +162,6 @@ static void test_MockDepth_Value_Arg0(void) {
 
 static void test_MockOrder_Value_Arg0(void) {
     setUp();
-    Mock_CallOrderReset();
 
     testFn();
 

@@ -52,6 +52,7 @@ Mock_Void(mod_Init);
 // setUp_foo() -> setup().
 static void setUp(void)
 {
+    Test_Init();
     // The mock functions need to be reset for each test case. Failure to do so
     // will result is erroneous call counts returned by the framework. Forgetting
     // to reset the mock is a common mistake when getting started with the

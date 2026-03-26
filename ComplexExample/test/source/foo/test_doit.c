@@ -25,6 +25,7 @@ static uint32_t test_Add(uint32_t a, uint32_t b)
 
 static void setUp(void)
 {
+    Test_Init();
     // For each test case the mocks need to be reset...
     Mock_Reset(foo_Add);
 

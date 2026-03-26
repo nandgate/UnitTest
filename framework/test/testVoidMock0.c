@@ -38,6 +38,7 @@ void fake_testFn(void) {
 static void setUp(void) {
     _assertions= 0;
     _mockExit= false;
+    Test_Init();
     wasFakeCalled= false;
     
     Mock_Reset(testFn);
@@ -53,7 +54,6 @@ static void test_MockDepth_Void_Arg0(void) {
 
 static void test_MockOrder_Void_Arg0(void) {
     setUp();
-    Mock_CallOrderReset();
 
     testFn();
 

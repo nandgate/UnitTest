@@ -7,6 +7,7 @@ Mock_Vars(5);   // must come before mocks
 // is empty.
 static void setUp(void)
 {
+    Test_Init();
 }
 
 // Here are are testing the return value from the unit under test.

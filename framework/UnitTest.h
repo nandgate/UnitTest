@@ -34,15 +34,8 @@
 #include <string.h>
 
 // UnitTest
-// Version: 0.0.4
+// Version: 0.0.5
 
-
-// TODO: determine the _mockCallHistory array size. depth is the depth for a
-// single function, this tracks all functions.  The upper bound is depth *
-// number of mocks.
-
-// Issue: How to reset the _mockCallIndex at the start of every test. Prefer
-// somehow reset this auomagically?
 
 // Note: Macros prefixed with '_' are private to the unit tester and are not
 // intended to be used by test code directly.
@@ -181,13 +174,6 @@
     if(!_fail) _assertions++; \
     }
 
-// TODO
-#define Assert_StrContains(expected, actual) \
-    Assert_Fail("TODO: Assert_StrContains()")
-
-// TODO
-#define Assert_SubString(pos, expected, actual) \
-    Assert_Fail("TODO: Assert_SubString())")
 
 #define Assert_True(actual) \
     if (!(actual)) { \
@@ -343,7 +329,7 @@
         arg1_t arg1History[_mockDepth]; \
         arg2_t arg2History[_mockDepth]; \
         arg3_t arg3History[_mockDepth]; \
-        arg3_t arg4History[_mockDepth]; \
+        arg4_t arg4History[_mockDepth]; \
     } _mock_##fn; \
     void fn(arg0_t arg0, arg1_t arg1, arg2_t arg2, arg3_t arg3, arg4_t arg4) { \
         _mock_##fn.arg0History[_mock_##fn.callCount]= arg0; \
@@ -378,8 +364,9 @@
 #define Mock_Reset(fn) \
     memset(&_mock_##fn, 0, sizeof(_mock_##fn))
 
-#define Mock_CallOrderReset() \
-    _callOrderIndex = 0
+#define Test_Init() \
+    _callOrderIndex = 0; \
+    _note = NULL
 
 #define Mock_Custom(fn, custom) \
     _mock_##fn.customMock= custom
@@ -392,6 +379,7 @@
 #define Mock_ReturnsSequence(fn, len, seq) \
     _mock_##fn.sequenceLength= len; \
     _mock_##fn.sequence= seq; \
+    _mock_##fn.sequenceIdx= 0; \
     _mock_##fn.isReturnSet= true
 
 #define Mock_Value(ret_t, fn) \
@@ -414,7 +402,7 @@
             return  _mock_##fn.retHistory[_mock_##fn.callCount-1]; \
         } \
         else { _Mock_Return(fn); }\
-    }
+    } \
     END_EXTERN_C
 
 #define Mock_Value1(ret_t, fn, arg0_t) \
@@ -496,7 +484,7 @@
             return  _mock_##fn.retHistory[_mock_##fn.callCount-1]; \
         } \
         else { _Mock_Return(fn); } \
-    }
+    } \
     END_EXTERN_C
 
 #define Mock_Value4(ret_t, fn, arg0_t, arg1_t, arg2_t, arg3_t) \
@@ -761,7 +749,7 @@
     } else if((_mock_##fn.arg0History[0] != (arg0)) || \
               (_mock_##fn.arg1History[0] != (arg1))) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_CalledFirst2 failed: %s, Expected: %d, %d, Actual: %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)_mock_##fn.arg0History[0], (uint32_t)_mock_##fn.arg1History[1]); \
+        printf("Assert_CalledFirst2 failed: %s, Expected: %d, %d, Actual: %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)_mock_##fn.arg0History[0], (uint32_t)_mock_##fn.arg1History[0]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -776,7 +764,7 @@
               (_mock_##fn.arg1History[0] != (arg1)) || \
               (_mock_##fn.arg2History[0] != (arg2))) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_CalledFirst3 failed: %s, Expected: %d, %d, %d, Actual: %d, %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)(arg2), (uint32_t)_mock_##fn.arg0History[0], (uint32_t)_mock_##fn.arg2History[1], (uint32_t)_mock_##fn.arg2History[1]); \
+        printf("Assert_CalledFirst3 failed: %s, Expected: %d, %d, %d, Actual: %d, %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)(arg2), (uint32_t)_mock_##fn.arg0History[0], (uint32_t)_mock_##fn.arg1History[0], (uint32_t)_mock_##fn.arg2History[0]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -792,7 +780,7 @@
               (_mock_##fn.arg2History[0] != (arg2)) || \
               (_mock_##fn.arg3History[0] != (arg3))) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_CalledFirst4 failed: %s, Expected: %d, %d, %d, %d Actual: %d, %d, %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)(arg2), (uint32_t)(arg3), (uint32_t)_mock_##fn.arg0History[0], (uint32_t)_mock_##fn.arg1History[1], (uint32_t)_mock_##fn.arg2History[1], (uint32_t)_mock_##fn.arg3History[1]); \
+        printf("Assert_CalledFirst4 failed: %s, Expected: %d, %d, %d, %d Actual: %d, %d, %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)(arg2), (uint32_t)(arg3), (uint32_t)_mock_##fn.arg0History[0], (uint32_t)_mock_##fn.arg1History[0], (uint32_t)_mock_##fn.arg2History[0], (uint32_t)_mock_##fn.arg3History[0]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -809,7 +797,7 @@
               (_mock_##fn.arg3History[0] != (arg3)) || \
               (_mock_##fn.arg4History[0] != (arg4))) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_CalledFirst4 failed: %s, Expected: %d, %d, %d, %d, %d Actual: %d, %d, %d, %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)(arg2), (uint32_t)(arg3), (uint32_t)(arg4), (uint32_t)_mock_##fn.arg0History[0], (uint32_t)_mock_##fn.arg1History[1], (uint32_t)_mock_##fn.arg2History[1], (uint32_t)_mock_##fn.arg3History[1], (uint32_t)_mock_##fn.arg4History[1]); \
+        printf("Assert_CalledFirst5 failed: %s, Expected: %d, %d, %d, %d, %d Actual: %d, %d, %d, %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)(arg2), (uint32_t)(arg3), (uint32_t)(arg4), (uint32_t)_mock_##fn.arg0History[0], (uint32_t)_mock_##fn.arg1History[0], (uint32_t)_mock_##fn.arg2History[0], (uint32_t)_mock_##fn.arg3History[0], (uint32_t)_mock_##fn.arg4History[0]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -867,7 +855,7 @@
               (_mock_##fn.arg2History[_mock_##fn.callCount-1] != (arg2)) || \
               (_mock_##fn.arg3History[_mock_##fn.callCount-1] != (arg3))) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_CalledLast4 failed: %s, Expected: %d, %d, %d, %d Actual: %d, %d, %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)(uint32_t)(arg2), (uint32_t)(arg3), (uint32_t)_mock_##fn.arg0History[_mock_##fn.callCount-1], (uint32_t)_mock_##fn.arg1History[_mock_##fn.callCount-1], (uint32_t)_mock_##fn.arg2History[_mock_##fn.callCount-1], (uint32_t)_mock_##fn.arg3History[_mock_##fn.callCount-1]); \
+        printf("Assert_CalledLast4 failed: %s, Expected: %d, %d, %d, %d Actual: %d, %d, %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)(arg2), (uint32_t)(arg3), (uint32_t)_mock_##fn.arg0History[_mock_##fn.callCount-1], (uint32_t)_mock_##fn.arg1History[_mock_##fn.callCount-1], (uint32_t)_mock_##fn.arg2History[_mock_##fn.callCount-1], (uint32_t)_mock_##fn.arg3History[_mock_##fn.callCount-1]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -897,7 +885,7 @@
         _Mock_Exit(); \
     } else if(_mock_##fn.arg0History[n-1] != (arg0)) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_CalledN1 failed: %s, Expected: %d, Actual: %d\n", #fn, (uint32_t)(arg0), (uint32_t)_mock_##fn.arg0History[_mock_##fn.callCount-1]); \
+        printf("Assert_CalledN1 failed: %s, Expected: %d, Actual: %d\n", #fn, (uint32_t)(arg0), (uint32_t)_mock_##fn.arg0History[n-1]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -911,7 +899,7 @@
     } else if((_mock_##fn.arg0History[n-1] != (arg0)) || \
               (_mock_##fn.arg1History[n-1] != (arg1))) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_CalledN2 failed: %s, Expected: %d, %d, Actual: %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)_mock_##fn.arg0History[_mock_##fn.callCount-1], (uint32_t)_mock_##fn.arg1History[_mock_##fn.callCount-1]); \
+        printf("Assert_CalledN2 failed: %s, Expected: %d, %d, Actual: %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)_mock_##fn.arg0History[n-1], (uint32_t)_mock_##fn.arg1History[n-1]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -926,7 +914,7 @@
               (_mock_##fn.arg1History[n-1] != (arg1)) || \
               (_mock_##fn.arg2History[n-1] != (arg2))) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_CalledN3 failed: %s, Expected: %d, %d, %d, Actual: %d, %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)(arg2), (uint32_t)_mock_##fn.arg0History[_mock_##fn.callCount-1], (uint32_t)_mock_##fn.arg1History[_mock_##fn.callCount-1], (uint32_t)_mock_##fn.arg2History[_mock_##fn.callCount-1]); \
+        printf("Assert_CalledN3 failed: %s, Expected: %d, %d, %d, Actual: %d, %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)(arg2), (uint32_t)_mock_##fn.arg0History[n-1], (uint32_t)_mock_##fn.arg1History[n-1], (uint32_t)_mock_##fn.arg2History[n-1]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -942,7 +930,7 @@
               (_mock_##fn.arg2History[n-1] != (arg2)) || \
               (_mock_##fn.arg3History[n-1] != (arg3))) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_CalledN4 failed: %s, Expected: %d, %d, %d, %d Actual: %d, %d, %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)(arg2), (uint32_t)(arg3), (uint32_t)_mock_##fn.arg0History[_mock_##fn.callCount-1], (uint32_t)_mock_##fn.arg1History[_mock_##fn.callCount-1], (uint32_t)_mock_##fn.arg2History[_mock_##fn.callCount-1], (uint32_t)_mock_##fn.arg3History[_mock_##fn.callCount-1]); \
+        printf("Assert_CalledN4 failed: %s, Expected: %d, %d, %d, %d Actual: %d, %d, %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)(arg2), (uint32_t)(arg3), (uint32_t)_mock_##fn.arg0History[n-1], (uint32_t)_mock_##fn.arg1History[n-1], (uint32_t)_mock_##fn.arg2History[n-1], (uint32_t)_mock_##fn.arg3History[n-1]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -959,7 +947,7 @@
               (_mock_##fn.arg3History[n-1] != (arg3)) || \
               (_mock_##fn.arg4History[n-1] != (arg4))) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_CalledN4 failed: %s, Expected: %d, %d, %d, %d, %d Actual: %d, %d, %d, %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)(arg2), (uint32_t)(arg3), (uint32_t)(arg4), (uint32_t)_mock_##fn.arg0History[_mock_##fn.callCount-1], (uint32_t)_mock_##fn.arg1History[_mock_##fn.callCount-1], (uint32_t)_mock_##fn.arg2History[_mock_##fn.callCount-1], (uint32_t)_mock_##fn.arg3History[_mock_##fn.callCount-1], (uint32_t)_mock_##fn.arg4History[_mock_##fn.callCount-1]); \
+        printf("Assert_CalledN5 failed: %s, Expected: %d, %d, %d, %d, %d Actual: %d, %d, %d, %d, %d\n", #fn, (uint32_t)(arg0), (uint32_t)(arg1), (uint32_t)(arg2), (uint32_t)(arg3), (uint32_t)(arg4), (uint32_t)_mock_##fn.arg0History[n-1], (uint32_t)_mock_##fn.arg1History[n-1], (uint32_t)_mock_##fn.arg2History[n-1], (uint32_t)_mock_##fn.arg3History[n-1], (uint32_t)_mock_##fn.arg4History[n-1]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -1027,7 +1015,7 @@
     } \
     if(!_match) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_AllCallsEquals4 failed: %s, Call: %d, Expected: %d Actual: %d, %d, %d, %d\n", #fn, _i, (uint32_t)(arg3), (uint32_t)_mock_##fn.arg0History[_i], (uint32_t)_mock_##fn.arg1History[_i], (uint32_t)_mock_##fn.arg2History[_i], _mock_##fn.arg3History[_i]); \
+        printf("Assert_AllCallsEquals4 failed: %s, Call: %d, Expected: %d Actual: %d, %d, %d, %d\n", #fn, _i, (uint32_t)(arg3), (uint32_t)_mock_##fn.arg0History[_i], (uint32_t)_mock_##fn.arg1History[_i], (uint32_t)_mock_##fn.arg2History[_i], (uint32_t)_mock_##fn.arg3History[_i]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -1078,7 +1066,7 @@
     } \
     if(!_match) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_AllCallsLessThan2 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg1), (uint32_t)_mock_##fn.arg0History[_i]); \
+        printf("Assert_AllCallsLessThan2 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg1), (uint32_t)_mock_##fn.arg1History[_i]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -1095,7 +1083,7 @@
     } \
     if(!_match) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_AllCallsLessThan3 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg2), (uint32_t)_mock_##fn.arg0History[_i]); \
+        printf("Assert_AllCallsLessThan3 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg2), (uint32_t)_mock_##fn.arg2History[_i]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -1112,7 +1100,7 @@
     } \
     if(!_match) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_AllCallsLessThan4 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg3), (uint32_t)_mock_##fn.arg0History[_i]); \
+        printf("Assert_AllCallsLessThan4 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg3), (uint32_t)_mock_##fn.arg3History[_i]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -1129,7 +1117,7 @@
     } \
     if(!_match) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_AllCallsLessThan5 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg4), (uint32_t)_mock_##fn.arg0History[_i]); \
+        printf("Assert_AllCallsLessThan5 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg4), (uint32_t)_mock_##fn.arg4History[_i]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -1163,7 +1151,7 @@
     } \
     if(!_match) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_AllCallsGreaterThan2 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg1), (uint32_t)_mock_##fn.arg0History[_i]); \
+        printf("Assert_AllCallsGreaterThan2 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg1), (uint32_t)_mock_##fn.arg1History[_i]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -1180,7 +1168,7 @@
     } \
     if(!_match) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_AllCallsGreaterThan3 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg2), (uint32_t)_mock_##fn.arg0History[_i]); \
+        printf("Assert_AllCallsGreaterThan3 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg2), (uint32_t)_mock_##fn.arg2History[_i]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -1197,7 +1185,7 @@
     } \
     if(!_match) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_AllCallsGreaterThan4 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg3), (uint32_t)_mock_##fn.arg0History[_i]); \
+        printf("Assert_AllCallsGreaterThan4 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg3), (uint32_t)_mock_##fn.arg3History[_i]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \
@@ -1214,7 +1202,7 @@
     } \
     if(!_match) { \
         _Mock_PrintFileLine(); \
-        printf("Assert_AllCallsGreaterThan5 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg4), (uint32_t)_mock_##fn.arg0History[_i]); \
+        printf("Assert_AllCallsGreaterThan5 failed: %s, Call: %d, Expected: %d, Actual: %d\n", #fn, _i, (uint32_t)(arg4), (uint32_t)_mock_##fn.arg4History[_i]); \
         _Mock_Exit(); \
     } else { \
         _assertions++; \

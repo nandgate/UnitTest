@@ -12,6 +12,7 @@ Mock_Vars(5);   // must come before mocks
 
 static void setUp(void)
 {
+    Test_Init();
     gpio->dirSet= TEST_UNSET;
     gpio->outClear = TEST_UNSET;
     gpio->outSet = TEST_UNSET;

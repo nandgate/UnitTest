@@ -18,6 +18,7 @@ extern int mod_localState;
 
 static void setUp(void)
 {
+    Test_Init();
     // It is important to set the state variable to their "unset" state so you
     // can validate that they are/are not set by the unit. It is very common to
     // to forget to do this- and the test is not logically correct without this.

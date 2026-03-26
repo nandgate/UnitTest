@@ -12,6 +12,7 @@ Mock_Vars(5);   // must come before mocks
 // Nothing to do here but there is ALWAYS a setUp();
 static void setUp(void)
 {
+    Test_Init();
 }
 
 static void test_Zeros(void)

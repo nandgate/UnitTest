@@ -35,6 +35,7 @@ Mock_Value(int, test_MockValue);
 static void setUp(void) {
     _assertions= 0;
     _mockExit= false;
+    Test_Init();
 }
 
 static void test_Pass_AssertArrayEquals(void) {
@@ -323,20 +324,10 @@ static void test_Mock_Reset(void) {
     Assert_Equals(0, _mock_test_Mock.callCount);
 }
 
-static void test_Mock_CallOrderReset(void) {
-    setUp();
-    _callOrderIndex= 1;
-
-    Mock_CallOrderReset();
-
-    Assert_Equals(0, _callOrderIndex);
-}
-
 static void test_Mock_CallOrderPass(void) {
     setUp();
     Mock_Reset(test_Mock);
     Mock_Reset(test_Mock2);
-    Mock_CallOrderReset();
 
     test_Mock();
     test_Mock2();
@@ -352,7 +343,6 @@ static void test_Mock_CallOrderFail(void) {
     setUp();
     Mock_Reset(test_Mock);
     Mock_Reset(test_Mock2);
-    Mock_CallOrderReset();
 
     test_Mock2();
     test_Mock();
@@ -368,7 +358,6 @@ static void test_Mock_CallOrder1stNotCalled(void) {
     setUp();
     Mock_Reset(test_Mock);
     Mock_Reset(test_Mock2);
-    Mock_CallOrderReset();
 
     test_Mock();
 
@@ -383,7 +372,6 @@ static void test_Mock_CallOrder2ndNotCalled(void) {
     setUp();
     Mock_Reset(test_Mock);
     Mock_Reset(test_Mock2);
-    Mock_CallOrderReset();
 
     test_Mock();
 
@@ -447,7 +435,6 @@ int main(int argc, char **argv) {
     test_InitSave();
 
     test_Mock_Reset();
-    test_Mock_CallOrderReset();
     test_Mock_CallOrderPass();
     test_Mock_CallOrderFail();
     test_Mock_CallOrder1stNotCalled();

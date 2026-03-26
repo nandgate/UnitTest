@@ -55,7 +55,6 @@ static void test_MockDepth_Void_Arg2(void) {
 
 static void test_MockOrder_Void_Arg2(void) {
     setUp();
-    Mock_CallOrderReset();
 
     testFn(0, 1);
 
@@ -214,7 +213,7 @@ static void test_FailNoCalles_AssertCalledFirst_Arg2() {
     Assert_CalledFirst2(testFn, 0, 1);
     
     if (_assertions != 0) {
-        printf("**Fail: test_Fail_AssertCalledFirst_Arg2\n");
+        printf("**Fail: test_FailNoCalles_AssertCalledFirst_Arg2\n");
         exit(-1);
     }    
 }
@@ -267,7 +266,7 @@ static void test_Pass_AssertCalledN_Arg2(void) {
     Assert_CalledN2(2, testFn, 1, 2);
     
     if (_assertions != 1) {
-        printf("**Fail: test_Pass_AssertCalledLast_Arg2\n");
+        printf("**Fail: test_Pass_AssertCalledN_Arg2\n");
         exit(-1);
     }
 }
@@ -281,7 +280,7 @@ static void test_Fail_AssertCalledN_Arg2(void) {
     Assert_CalledN2(2, testFn, 1, 2);
     
     if (_assertions != 0) {
-        printf("**Fail: test_Fail_AssertCalledLast_Arg2\n");
+        printf("**Fail: test_Fail_AssertCalledN_Arg2\n");
         exit(-1);
     }    
 }
@@ -292,7 +291,7 @@ static void test_FailNoCalles_AssertCalledN_Arg2(void) {
     Assert_CalledN2(2, testFn, 0, 1);
     
     if (_assertions != 0) {
-        printf("**Fail: test_FailNoCalles_AssertCalledLast_Arg2\n");
+        printf("**Fail: test_FailNoCalles_AssertCalledN_Arg2\n");
         exit(-1);
     }    
 }
@@ -337,7 +336,7 @@ static void test_Pass_AssertAllCallsLessThan_Arg2(void) {
     Assert_AllCallsLessThan2(testFn, 3);
 
     if (_assertions != 1) {
-        printf("**Fail: test_Pass_AssertAllCallsLessThan_Arg1\n");
+        printf("**Fail: test_Pass_AssertAllCallsLessThan_Arg2\n");
         exit(-1);
     }
 }
@@ -352,7 +351,7 @@ static void test_Fail_AssertAllCallsLessThan_Arg2(void) {
     Assert_AllCallsLessThan2(testFn, 2);
 
     if (_assertions != 0) {
-        printf("**Fail: test_Fail_AssertAllCallsLessThan_Arg1\n");
+        printf("**Fail: test_Fail_AssertAllCallsLessThan_Arg2\n");
         exit(-1);
     }
 }
@@ -367,7 +366,7 @@ static void test_Pass_AssertAllCallsGreaterThan_Arg2(void) {
     Assert_AllCallsGreaterThan2(testFn, 1);
 
     if (_assertions != 1) {
-        printf("**Fail: test_Pass_AssertAllCallsGreaterThan_Arg1\n");
+        printf("**Fail: test_Pass_AssertAllCallsGreaterThan_Arg2\n");
         exit(-1);
     }
 }
@@ -382,7 +381,7 @@ static void test_Fail_AssertAllCallsGreaterThan_Arg2(void) {
     Assert_AllCallsGreaterThan2(testFn, 2);
 
     if (_assertions != 0) {
-        printf("**Fail: test_Fail_AssertAllCallsGreaterThan_Arg1\n");
+        printf("**Fail: test_Fail_AssertAllCallsGreaterThan_Arg2\n");
         exit(-1);
     }
 }
